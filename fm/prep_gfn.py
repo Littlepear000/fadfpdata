@@ -42,8 +42,12 @@ gfn_emde = gfn_emde[['ifscode', 'year', 'deficit', 'maturing_debt', 'gfn']]
 gfn_emde['country'] = gfn_emde['ifscode'].map(ifs_to_countryname)
 gfn_emde = gfn_emde.sort_values('country')
 
-gfn = pd.concat([gfn_ae, gfn_emde])
+gfn = pd.concat([gfn_ae, gfn_emde]).sort_values('country')
 
 # Gross financing needs: EMDE - alternative source: EDI
 # vintage = '2023-04'
-# edi_amo = edi_utilities.get_edi_csd_ccx_data('all', 'G_AMO', freq='A', vintage='all', exercise='VEE', longformat=True)
+# edi_amo = edi_utilities.get_edi_csd_ccx_data('all', 'G_AMO', freq='A', vintage='2023-04', exercise='VEE', longformat=True).rename(columns={'country': 'ifscode'})
+# edi_amo['year'] = edi_amo['dates'].dt.year
+# edi_amo['ifscode'] = edi_amo['ifscode'].astype('int')
+# check = gfn.merge(edi_amo, on=['ifscode', 'year'], how='left')
+# check_em = check.inlist('ifscode', dum.emde)

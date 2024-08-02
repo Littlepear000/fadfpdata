@@ -15,24 +15,6 @@ ecos = spr.ecos()
 dum = Dummy()
 
 
-# Average term to maturity - source: Bloomberg
-maturity_raw = cpd.pwread(fr'{input_folder}/Bloomberg_Years_to_Maturity_{blmbg_update_date}.xlsx', sheet_name=blmbg_update_date, cellrange='H:I')[0].drop(0)
-maturity_raw.columns = ['country', 'years_to_maturity']
-maturity_raw['ifscode'] = maturity_raw['country'].map(countryname_to_ifs)
-maturity = maturity_raw.dropna(subset='ifscode')[['ifscode', 'years_to_maturity']]
-
-# Debt to average maturity - source: Bloomberg + WEO
-weodata = imf_datatools.get_ecos_sdmx_data(weo_version, 'all', ['GGXWDG_GDP'], freq='A', longformat=True)
-weolivedata = imf_datatools.get_ecos_sdmx_data('WEO_WEO_Live', 'all', ['GGXWDG_GDP'], freq='A', longformat=True)
-
-weodata.columns = ['ifscode', 'dates', 'ggxwdg_gdp']
-weodata['year'] = weodata['dates'].dt.year
-weodata = weodata[weodata['year']==int(fm_version[:4])-1]
-
-
-
-
-
 # data = pd.read_csv(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Databases\ECOS\Ecos\ecosdata_20240703.csv')[['ifscode', 'year', 'ggei', 'ggxwdg', 'ngdp']]
 data = imf_datatools.get_ecos_sdmx_data(weo_version, 'all', ['GGEI', 'GGXWDG', 'NGDP', 'GGXCNL_GDP'], freq='A', longformat=True)
 data.columns = data.columns.str.lower()
