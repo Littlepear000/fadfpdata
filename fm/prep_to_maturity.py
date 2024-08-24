@@ -22,7 +22,7 @@ maturity_raw['ifscode'] = maturity_raw['country'].map(countryname_to_ifs)
 maturity = maturity_raw.dropna(subset='ifscode')[['ifscode', 'years_to_maturity']]
 
 # Debt to average maturity - source: Bloomberg + WEO
-weo_debt = ecos[['ifscode', 'year', 'ggxwdg_gdp']].inlist('year', curr_year-1)
+weo_debt = ecos[['ifscode', 'year', 'ggxwdg_gdp']].inlist('year', curr_year)
 d_to_m = maturity.merge(weo_debt, on='ifscode', how='left')
 d_to_m['debt_to_maturity'] = d_to_m['ggxwdg_gdp'] / d_to_m['years_to_maturity']
 d_to_m['country'] = d_to_m['ifscode'].map(ifs_to_countryname)
