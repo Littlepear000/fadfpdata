@@ -1,7 +1,9 @@
 from fadfpdata.fm import *
 
+weo = spr.weovint().v2024
+
 # Gross financing needs: AE - source: Bloomberg + WEO
-ddis = cpd.pwread(fr'{input_folder}/Bloomberg_DDIS_AE_{blmbg_update_date}.xlsx', sheet_name='Mat_Debt%', cellrange='B3:F36')[0]
+ddis = cpd.pwread(r'Q:\DATA\FP\Fiscal Monitor\2024-04-April_Monitor\MSA\Bloomberg\GFNTable_FM_DDIS_FMLive_02222024.xlsx', sheet_name='Mat_Debt%', cellrange='B3:F36')[0]
 ddis['ifscode'] = ddis['country'].map(countryname_to_ifs)
 for year in range(curr_year, curr_year+4):
     ddis[str(year)] = ddis[str(year)]*10**6
@@ -10,31 +12,25 @@ ddis = ddis.melt(id_vars=['country', 'ifscode'],
                  var_name='year',
                  value_name='ddis')
 ddis['year'] = ddis['year'].astype('int')
-ddis = ddis.merge(ecos[['ifscode', 'year', 'ngdp']], on=['ifscode', 'year'], how='left')
+ddis = ddis.merge(weo[['ifscode', 'year', 'ngdp']], on=['ifscode', 'year'], how='left')
 ddis['maturing_debt'] = ddis['ddis'] / ddis['ngdp'] * 100
 ddis_ae = ddis.inlist('year', curr_year)
 
-deficit_ae = ecos.inlist('ifscode', dum.ae).inlist('year', curr_year)
+deficit_ae = weo.inlist('ifscode', dum.ae).inlist('year', curr_year)
 deficit_ae['deficit'] = - deficit_ae['ggxcnl'] / deficit_ae['ngdp_fy'] * 100
 gfn_ae = deficit_ae.merge(ddis_ae, on=['ifscode', 'year'], how='left')[['ifscode', 'deficit', 'maturing_debt']]
 gfn_ae['gfn'] = gfn_ae['deficit'] + gfn_ae['maturing_debt']
 
 # Gross financing needs: EMDE - source: WEO
-gfn_emde = ecos.inlist('ifscode', dum.emde).inlist('year', curr_year)
+gfn_emde = weo.inlist('ifscode', dum.emde).inlist('year', curr_year)
 gfn_emde['deficit'] = - gfn_emde['ggxcnl'] / gfn_emde['ngdp_fy'] * 100
 gfn_emde['maturing_debt'] = (gfn_emde['ggds'] - gfn_emde['ggei']) / gfn_emde['ngdp_fy'] * 100
-
-# Gross financing needs: EMDE - source: additional amortization data from country desk
-desk = cpd.pwread(fr'{input_folder}/Additional country desk data on amortization.xlsx')[0]
-desk['ifscode'] = desk['country'].map(countryname_to_ifs)
-amort_map = desk.cpdmap_ifscode__amort
-for ifs, amort in amort_map.items():
-    gfn_emde.loc[gfn_emde['ifscode']==ifs, 'maturing_debt'] = amort
-
 gfn_emde['gfn'] = gfn_emde['deficit'] + gfn_emde['maturing_debt']
 gfn_emde = gfn_emde[['ifscode', 'deficit', 'maturing_debt', 'gfn']]
 
 gfn = pd.concat([gfn_ae, gfn_emde]).sort_values('ifscode')
+gfn['country'] = gfn['ifscode'].map(ifs_to_countryname)
+gfn.to_excel('temp.xlsx')
 
 # Gross financing needs: EMDE - alternative source: EDI
 # vintage = '2023-04'

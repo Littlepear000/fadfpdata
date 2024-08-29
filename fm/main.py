@@ -1,39 +1,52 @@
-import pandas as pd
-import pandaspro as cpd
-import sprnldata as spr
-from imf_datatools import worldbank_utilities, edi_utilities
-from sprnldata.utils.core import countryname_to_ifs, ifs_to_countryname
-from sprnldata.myclass.dummy import Dummy
+from fadfpdata.fm import *
+from fadfpdata.fm.prep_ep import ep
+from fadfpdata.fm.prep_cnl import cnl
+from fadfpdata.fm.prep_gfn import gfn
+from fadfpdata.fm.prep_rlessg import rlessg
+from fadfpdata.fm.prep_to_maturity import d_to_m
+from fadfpdata.fm.prep_non_resholding import nrh
 
-fm_version = '2024-10'
-curr_year = int(fm_version[:4])
-fm_folder = f'{fm_version}-October_Monitor' if fm_version[-2:]=='10' else f'{fm_version}-April_Monitor'
-input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
-weo_version = 'WEO_WEOJul2024Pub'
-blmbg_update_date = '20240718'
-ecos = spr.ecos()
-dum = Dummy()
+def weighted_avg(group, indicator):
+    return (group[indicator] * group['ngdp_fy_usd']).sum() / group['ngdp_fy_usd'].sum()
 
+ngdpd_fy = ecos.query(f'year == {curr_year}')[['ifscode', 'ngdp_fy_usd']]
+fix_col = pd.read_excel(fr'{input_folder}\fixed columns.xlsx', sheet_name='combine')
+table = fix_col.copy()
+for df in [ep, cnl, gfn, rlessg, d_to_m, nrh, ngdpd_fy]:
+    table = table.merge(df, on='ifscode', how='left')
+table = cpd.FramePro(table)
 
-# data = pd.read_csv(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Databases\ECOS\Ecos\ecosdata_20240703.csv')[['ifscode', 'year', 'ggei', 'ggxwdg', 'ngdp']]
-data = imf_datatools.get_ecos_sdmx_data(weo_version, 'all', ['GGEI', 'GGXWDG', 'NGDP', 'GGXCNL_GDP'], freq='A', longformat=True)
-data.columns = data.columns.str.lower()
-data['year'] = data['dates'].dt.year
-data = data.query('year >= 2000')
-data['g'] = data.groupby('ifscode')['ngdp'].pct_change()
-data['ggxwdg_l'] = data.groupby('ifscode')['ggxwdg'].shift(1)
-data['r'] = data['ggei'] / data['ggxwdg_l']
-data['rlessg'] = (data['r'] - data['g'])/(1 + data['g'])
+group_dict = {
+    'AE': dum.ae,
+    'EM': dum.em,
+    'LIC': dum.lic,
+    'G7': dum.g7,
+    'G20': dum.g20,
+    'G20_adv': dum.g20_adv,
+    'G20_em': dum.g20_em
+}
+agg_all = pd.DataFrame()
+for group in group_dict.keys():
+    df_group = table.inlist('ifscode', group_dict[group])
+    weighted_avg = {}
+    for col in [col for col in df_group.columns if col not in ['country', 'ifscode', 'ngdpd_fy']]:
+        weighted_avg[col] = (df_group[col] * df_group['ngdp_fy_usd']).sum() / df_group['ngdp_fy_usd'].sum()
+    agg = pd.DataFrame(weighted_avg, index= [group])
+    agg_all = pd.concat([agg_all, agg])
 
+agg_all = agg_all.reset_index().rename(columns={'index': 'country'})
+final_table = pd.concat([agg_all, table.drop('ifscode', axis=1)])[col_ren.keys()]
 
-# Non-resident holding
-series = 'DT.DOD.DECT.CD.GG.AR.US'
-# Get all metadata
-meta = worldbank_utilities.get_all_worldbank_metadata()
-# Check the series of interest is available
-series in meta.index
+# Export
+ae_list = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0]['unnamed_1'].tolist()
+em_list = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-24', cellrange='B4:B47')[0]['unnamed_1'].tolist()
+lic_list = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-25', cellrange='B4:B44')[0]['unnamed_1'].tolist()
 
-# Get the data for all available countries
-wbdata = worldbank_utilities.get_worldbank_data(series, 'all', longformat=True)
+ae_final = final_table[final_table['country'].isin(ae_list)].fillna('...')
+em_final = final_table[final_table['country'].isin(em_list)].fillna('...')
+lic_final = final_table[final_table['country'].isin(lic_list)].fillna('...')
 
-
+ps = cpd.PutxlSet(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx')
+ps.putxl(ae_final.drop('country', axis=1), sheet_name='STAT-23', cell='C4', header=False, index=False)
+ps.putxl(em_final.drop('country', axis=1), sheet_name='STAT-24', cell='C5', header=False, index=False)
+ps.putxl(lic_final.drop('country', axis=1), sheet_name='STAT-25', cell='C5', header=False, index=False)
