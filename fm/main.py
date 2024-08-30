@@ -25,6 +25,15 @@ group_dict = {
     'G20_adv': dum.g20_adv,
     'G20_em': dum.g20_em
 }
+pre_pan_cnl_dict = {
+    'AE': -3.1,
+    'EM': -3.1,
+    'LIC': -3.3,
+    'G7': -4.0,
+    'G20_adv': -3.6,
+    'G20_em': -3.5
+}
+
 agg_all = pd.DataFrame()
 for group in group_dict.keys():
     df_group = table.inlist('ifscode', group_dict[group])
@@ -35,16 +44,18 @@ for group in group_dict.keys():
     agg_all = pd.concat([agg_all, agg])
 
 agg_all = agg_all.reset_index().rename(columns={'index': 'country'})
-final_table = pd.concat([agg_all, table.drop('ifscode', axis=1)])[col_ren.keys()]
+final_table = pd.concat([agg_all, table.drop('ifscode', axis=1)])[col_ren.keys()].reset_index().drop('index', axis=1).fillna('...')
+final_table.loc[final_table['country'].isin(group_dict.keys()), 'nfw'] = ''
+final_table.loc[final_table['country'].isin(pre_pan_cnl_dict.keys()), 'pre_pan_cnl'] = final_table['country'].map(pre_pan_cnl_dict)
 
 # Export
 ae_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0].rename(columns={'unnamed_1': 'country'})
 em_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-24', cellrange='B3:B46')[0].rename(columns={'unnamed_1': 'country'})
 lic_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-25', cellrange='B3:B43')[0].rename(columns={'unnamed_1': 'country'})
 
-ae_final = ae_order.merge(final_table, on='country', how='left').fillna('...')
-em_final = em_order.merge(final_table, on='country', how='left').fillna('...')
-lic_final = lic_order.merge(final_table, on='country', how='left').fillna('...')
+ae_final = ae_order.merge(final_table, on='country', how='left')
+em_final = em_order.merge(final_table, on='country', how='left')
+lic_final = lic_order.merge(final_table, on='country', how='left')
 
 ps = cpd.PutxlSet(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx')
 ps.putxl(ae_final.drop('country', axis=1), sheet_name='STAT-23', cell='C4', header=False, index=False)
