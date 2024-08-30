@@ -10,8 +10,8 @@ ddis = ddis.melt(id_vars=['country', 'ifscode'],
                  var_name='year',
                  value_name='ddis')
 ddis['year'] = ddis['year'].astype('int')
-ddis = ddis.merge(ecos[['ifscode', 'year', 'ngdp']], on=['ifscode', 'year'], how='left')
-ddis['maturing_debt'] = ddis['ddis'] / ddis['ngdp'] * 100
+ddis = ddis.merge(ecos[['ifscode', 'year', 'ngdp_fy']], on=['ifscode', 'year'], how='left')
+ddis['maturing_debt'] = ddis['ddis'] / ddis['ngdp_fy'] * 100
 ddis_ae = ddis.inlist('year', curr_year)
 
 deficit_ae = ecos.inlist('ifscode', dum.ae).inlist('year', curr_year)

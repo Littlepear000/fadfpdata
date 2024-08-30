@@ -38,15 +38,15 @@ agg_all = agg_all.reset_index().rename(columns={'index': 'country'})
 final_table = pd.concat([agg_all, table.drop('ifscode', axis=1)])[col_ren.keys()]
 
 # Export
-ae_list = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0]['unnamed_1'].tolist()
-em_list = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-24', cellrange='B4:B47')[0]['unnamed_1'].tolist()
-lic_list = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-25', cellrange='B4:B44')[0]['unnamed_1'].tolist()
+ae_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0].rename(columns={'unnamed_1': 'country'})
+em_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-24', cellrange='B3:B46')[0].rename(columns={'unnamed_1': 'country'})
+lic_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-25', cellrange='B3:B43')[0].rename(columns={'unnamed_1': 'country'})
 
-ae_final = final_table[final_table['country'].isin(ae_list)].fillna('...')
-em_final = final_table[final_table['country'].isin(em_list)].fillna('...')
-lic_final = final_table[final_table['country'].isin(lic_list)].fillna('...')
+ae_final = ae_order.merge(final_table, on='country', how='left').fillna('...')
+em_final = em_order.merge(final_table, on='country', how='left').fillna('...')
+lic_final = lic_order.merge(final_table, on='country', how='left').fillna('...')
 
 ps = cpd.PutxlSet(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx')
 ps.putxl(ae_final.drop('country', axis=1), sheet_name='STAT-23', cell='C4', header=False, index=False)
-ps.putxl(em_final.drop('country', axis=1), sheet_name='STAT-24', cell='C5', header=False, index=False)
-ps.putxl(lic_final.drop('country', axis=1), sheet_name='STAT-25', cell='C5', header=False, index=False)
+ps.putxl(em_final.drop('country', axis=1), sheet_name='STAT-24', cell='C4', header=False, index=False)
+ps.putxl(lic_final.drop('country', axis=1), sheet_name='STAT-25', cell='C4', header=False, index=False)
