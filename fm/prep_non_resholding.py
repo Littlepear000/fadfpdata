@@ -12,7 +12,7 @@ wbdata.loc[wbdata['iso']=='PSE', 'iso'] = 'WBG'
 wbdata['ifscode'] = wbdata['iso'].map(iso_to_ifs)
 wbdata['year'] = wbdata['dates'].dt.year
 
-wbdata = wbdata[(wbdata['dates'] > f'{curr_year-1}-{curr_mon}-01') & (wbdata['ext_debt'].notnull())]
+wbdata = wbdata[(wbdata['dates'] >= f'{curr_year-1}-{curr_mon}-01') & (wbdata['ext_debt'].notnull())]
 wbdata = wbdata.loc[wbdata.groupby(['iso', 'ifscode'])['dates'].idxmax()]
 nrh = ecos[['ifscode', 'year', 'ggxwdg', 'ende']].merge(wbdata, on=['ifscode', 'year'], how='right')
 nrh['nrh'] = nrh['ext_debt'] * nrh['ende'] / nrh['ggxwdg'] * 100

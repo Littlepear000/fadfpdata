@@ -1,4 +1,5 @@
 from fadfpdata.fm import *
+import numpy as np
 
 # Gross financing needs: AE - source: Bloomberg + WEO
 ddis = cpd.pwread(fr'{input_folder}/Bloomberg_DDIS_AE_{blmbg_update_date}.xlsx', sheet_name='Mat_Debt%', cellrange='B3:F36')[0]
@@ -18,6 +19,7 @@ deficit_ae = ecos.inlist('ifscode', dum.ae).inlist('year', curr_year)
 deficit_ae['deficit'] = - deficit_ae['ggxcnl'] / deficit_ae['ngdp_fy'] * 100
 gfn_ae = deficit_ae.merge(ddis_ae, on=['ifscode', 'year'], how='left')[['ifscode', 'deficit', 'maturing_debt']]
 gfn_ae['gfn'] = gfn_ae['deficit'] + gfn_ae['maturing_debt']
+gfn_ae.loc[gfn_ae['ifscode'] == 171, 'gfn'] = np.nan  # change Andorra to missing
 
 # Gross financing needs: EMDE - source: WEO
 gfn_emde = ecos.inlist('ifscode', dum.emde).inlist('year', curr_year)

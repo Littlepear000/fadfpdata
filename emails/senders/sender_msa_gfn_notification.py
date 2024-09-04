@@ -5,7 +5,7 @@ msa_gfn_Sender = create_mail_class(
     r'C:\Users\xli7\Desktop\python_projects\fadfpdata\emails\templates\msa_gfn_notification.html',
     msa_gfn_notification
 )
-myemail = msa_gfn_Sender(ifscode=228)
+myemail = msa_gfn_Sender(ifscode=578)
 show = myemail.display()
 del create_mail_class
 del msa_gfn_notification
