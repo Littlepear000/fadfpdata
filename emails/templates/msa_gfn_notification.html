@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .remove_margin {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+
+        .remove_margin_bold {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            font-weight: bold;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .underline {
+            text-decoration: underline !important;
+        }
+
+        .bold_underline {
+            font-weight: bold;
+            text-decoration: underline !important;
+        }
+
+        .bold_italic {
+            font-weight: bold;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<p>Dear __[COUNTRY]__ country team,</p>
+
+<p>Trust this email finds you well! This is Shelley from the Fiscal Monitor team.
+    I’m writing to inform you about the change in methodology of the Gross Financing Needs calculation (in the Statistical Appendix table A24 “Structural Fiscal Indicators”).</p>
+
+<p>The Gross Financing Needs is defined as <span class="bold_underline">overall government deficit + debt amortization</span> (both in percent of GDP).
+    Previously, government debt amortization was coming from the VE database.
+    But this database has been discontinued, so we will be using the difference between <span class="bold_italic">GGDS</span> and <span class="bold_italic">GGEI</span> series from WEO to calculate government debt amortization going forward.
+    The detailed steps for calculation are shown below:</p>
+
+<p class="remove_margin_bold">Gross Financing Needs= (– GGXCNL + Government debt amortization) / NGDP_FY * 100</p>
+<p class="remove_margin_bold">Government debt amortization = GGDS – GGEI</p>
+<br>
+<p class="remove_margin">where</p>
+<p class="remove_margin">GGXCNL: General government net lending/borrowing, national currency</p>
+<p class="remove_margin">NGDP_FY: GDP in fiscal year, current prices in national currency</p>
+<p class="remove_margin">GGDS: General government debt service, national currency</p>
+<p class="remove_margin">GGEI: General government expense: Interest, national currency</p>
+
+{% if show_1 %}
+    <p>The receiving and releasing managers, in coordination with the staff, to discuss and agree on the length of the assignment and funding arrangement.</p>
+{% endif %}
+{% if show_2 %}
+    <p>xxxxxxxxxxxxxxxxxxxxation with the staff, to discuss and agree on the length of the assignment and funding arrangement.</p>
+{% endif %}
+
+<p class="remove_margin">Best,</p>
+<p class="remove_margin">Shelley</p>
+
+</body>
+</html>
