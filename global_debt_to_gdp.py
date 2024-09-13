@@ -4,9 +4,19 @@ import os
 import re
 import pandaspro as cpd
 from pandaspro import FramePro
+import sprnldata as spr
 
 def weighted_avg(group):
+    group = group.dropna(subset=['ggxwdg_gdp', 'ngdpd'])
     return (group['ggxwdg_gdp'] * group['ngdpd']).sum() / group['ngdpd'].sum()
+
+ecos = spr.ecos()[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']].query('year >= 2000')
+ecos = ecos[~ecos['ifscode'].isin([111, 924])]
+weovint = spr.weovint().v2010[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']]
+
+temp = ecos.groupby('year').apply(weighted_avg).reset_index()
+ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Fiscal Monitor October 2024\Charts and figures\Figure 1.1. Public Debt to GDP ratio, 2000-29.xlsx')
+ps.putxl(temp.drop('year', axis=1), sheet_name='C_GLOBAL', cell='U7', index=False, header=False)
 
 countrydummy_file = 'xldummies.xlsx'
 
