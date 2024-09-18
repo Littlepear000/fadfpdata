@@ -1,8 +1,8 @@
 import pandas as pd
 import re
 from pandaspro.core.frame import FramePro
-from sprnldata.myclass.dummy import Dummy
-from sprnldata.utils.core import ifs_to_countryname
+from fadfpdata.myclass.dummy import Dummy
+from fadfpdata.utils.core import ifs_to_countryname
 
 
 class ImfFrame_FADFP(FramePro):

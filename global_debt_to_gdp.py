@@ -4,7 +4,7 @@ import os
 import re
 import pandaspro as cpd
 from pandaspro import FramePro
-import sprnldata as spr
+import fadfpdata as spr
 
 def weighted_avg(group):
     group = group.dropna(subset=['ggxwdg_gdp', 'ngdpd'])

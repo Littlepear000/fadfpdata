@@ -1,9 +1,9 @@
 import pandas as pd
 import pandaspro as cpd
-import sprnldata as spr
+import fadfpdata as spr
 from imf_datatools import worldbank_utilities, edi_utilities
-from sprnldata.utils.core import countryname_to_ifs, ifs_to_countryname, iso_to_ifs
-from sprnldata.myclass.dummy import Dummy
+from fadfpdata.utils.core import countryname_to_ifs, ifs_to_countryname, iso_to_ifs
+from fadfpdata.myclass.dummy import Dummy
 
 fm_version = '2024-10'
 curr_year = int(fm_version[:4])

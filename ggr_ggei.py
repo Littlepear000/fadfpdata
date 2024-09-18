@@ -1,6 +1,6 @@
 import pandas as pd
-from sprnldata.myclass.dummy import Dummy
-from sprnldata.myclass.ecosdata import EcosData
+from fadfpdata.myclass.dummy import Dummy
+from fadfpdata.myclass.ecosdata import EcosData
 import pandaspro as cpd
 from pandaspro import CellPro
 
