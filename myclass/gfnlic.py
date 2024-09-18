@@ -1,5 +1,6 @@
-from fadfpdata.mydata.ImfFrame_fadfp import ImfFrame_FADFP
+from fadfpdata.myclass.ImfFrame import ImfFrame
 from pandaspro import cpdBaseFrame
+from fadfpdata import database_root
 
 gfnlic_im_rename = {
     'ifs_code': 'ifscode',
@@ -9,13 +10,13 @@ gfnlic_im_rename = {
 }
 
 @cpdBaseFrame(
-    path=r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Databases\GFN\lic',
+    path=fr'{database_root}\GFN\lic',
     file_type='xlsx',
     sheet_name='data',
     imr=gfnlic_im_rename,
     dvl=['ifscode', 'year', 'gfn']
 )
-class gfnlic(ImfFrame_FADFP):
+class GfnLic(ImfFrame):
     def __getattr__(self, item):
         if item.startswith('vinl'):
             onlykeepyear = int(item[4:])
@@ -29,4 +30,4 @@ class gfnlic(ImfFrame_FADFP):
 
 
 if __name__ == '__main__':
-    d = gfnlic()
+    d = GfnLic()

@@ -1,9 +1,7 @@
 import pandas as pd
 import pandaspro as cpd
-import fadfpdata as spr
-from imf_datatools import worldbank_utilities, edi_utilities
-from fadfpdata.utils.core import countryname_to_ifs, ifs_to_countryname, iso_to_ifs
 from fadfpdata.myclass.dummy import Dummy
+from fadfpdata.myclass.ecosdata import EcosData
 
 fm_version = '2024-10'
 curr_year = int(fm_version[:4])
@@ -11,8 +9,10 @@ curr_mon = int(fm_version[-2:])
 fm_folder = f'{fm_version}-October_Monitor' if curr_mon == 10 else f'{fm_version}-April_Monitor'
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
-blmbg_update_date = '20240718'
-ecos = spr.ecos()
+blmbg_update_date = '20240917'
+weo_update_date = '20240918'
+
+ecos = EcosData()
 dum = Dummy()
 
 col_ren = {

@@ -43,13 +43,14 @@ class ImfFrame(FramePro):
             ftype = item[0]
             years = item[1:]
             return filter_year(self, years=years, ftype=ftype)
+        elif item.startswith('vinl'):
+            onlykeepyear = int(item[4:])
+            return self.groupby('ifscode').apply(lambda x: x[(x['vintage_year'] == max(x['vintage_year'])) & (x['year'] == onlykeepyear)])
         # Inlist with Dummies
         elif item in ['keep2018', 'keep2025']:
             return self.inlist(item.replace('keep', 'roc'), 1)
         elif item in self.columns and item not in self.idvar:
             return self[self.idvar + [item]]
-        elif item in ['idvar', 'dmona', 'dmona_raw']:
-            pass
         else:
             return super().__getattr__(item)
 
@@ -85,9 +86,6 @@ class ImfFrame(FramePro):
             df['group'] = pd.Categorical(df['group'], categories=keep_group, ordered=True)
             df = df.sort_values('group').reset_index(drop=True)
         return df
-
-    def create_individual_col_data(self):
-        pass
 
     def agg_mean(self, indicator, group_dict):
         df_append = pd.DataFrame()

@@ -6,6 +6,7 @@ from fadfpdata.fm.prep_rlessg import rlessg
 from fadfpdata.fm.prep_to_maturity import d_to_m
 from fadfpdata.fm.prep_non_resholding import nrh
 
+
 def weighted_avg(group, indicator):
     return (group[indicator] * group['ngdp_fy_usd']).sum() / group['ngdp_fy_usd'].sum()
 
@@ -49,15 +50,15 @@ final_table.loc[final_table['country'].isin(group_dict.keys()), 'nfw'] = ''
 final_table.loc[final_table['country'].isin(pre_pan_cnl_dict.keys()), 'pre_pan_cnl'] = final_table['country'].map(pre_pan_cnl_dict)
 
 # Export
-ae_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0].rename(columns={'unnamed_1': 'country'})
-em_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-24', cellrange='B3:B46')[0].rename(columns={'unnamed_1': 'country'})
-lic_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx', sheet_name='STAT-25', cellrange='B3:B43')[0].rename(columns={'unnamed_1': 'country'})
+ae_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0].rename(columns={'unnamed_1': 'country'})
+em_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-24', cellrange='B3:B46')[0].rename(columns={'unnamed_1': 'country'})
+lic_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-25', cellrange='B3:B43')[0].rename(columns={'unnamed_1': 'country'})
 
 ae_final = ae_order.merge(final_table, on='country', how='left')
 em_final = em_order.merge(final_table, on='country', how='left')
 lic_final = lic_order.merge(final_table, on='country', how='left')
 
-ps = cpd.PutxlSet(fr'{output_folder}\StatTab23-24-25_FMOct2024_20240826.xlsx')
+ps = cpd.PutxlSet(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx')
 ps.putxl(ae_final.drop('country', axis=1), sheet_name='STAT-23', cell='C4', header=False, index=False)
 ps.putxl(em_final.drop('country', axis=1), sheet_name='STAT-24', cell='C4', header=False, index=False)
 ps.putxl(lic_final.drop('country', axis=1), sheet_name='STAT-25', cell='C4', header=False, index=False)

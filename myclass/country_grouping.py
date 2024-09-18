@@ -1,10 +1,9 @@
 from pandaspro import FramePro
 from pandaspro.cpdbase.cpd_base_frame import cpdBaseFrame
+from fadfpdata import database_root
 
-cg_path = r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Databases\CountryGrouping'
 
-
-@cpdBaseFrame(path=cg_path, file_type='xlsx')
+@cpdBaseFrame(path=fr'{database_root}\CountryGrouping', file_type='xlsx')
 class CountryGrouping(FramePro):
 
     def get_by_groupcode(self, code):

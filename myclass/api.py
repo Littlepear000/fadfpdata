@@ -1,9 +1,10 @@
 from fadfpdata.myclass.ecosdata import EcosData as ecos
 from fadfpdata.myclass.weovintage import WeoVinage as weovint
-from fadfpdata.myclass.mona.ClassDescription import MonaDes as monades
+from fadfpdata.myclass.dummy import Dummy as dum
+
 
 __all__ = [
     'ecos',
-    'monades',
     'weovint',
+    'dum'
 ]

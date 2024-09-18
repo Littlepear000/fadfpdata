@@ -1,13 +1,9 @@
-import pandas as pd
-import numpy as np
 from pandaspro import FramePro
 from pandaspro.cpdbase.cpd_base_frame import cpdBaseFrame
+from fadfpdata import database_root
 
 
-dummy_path = r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Databases\Dummy'
-
-
-@cpdBaseFrame(path=dummy_path, file_type='xlsx')
+@cpdBaseFrame(path=fr'{database_root}\Dummy', file_type='xlsx')
 class Dummy(FramePro):
 
     def __getattr__(self, item):

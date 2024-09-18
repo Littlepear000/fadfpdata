@@ -25,7 +25,6 @@ gfn_ae.loc[gfn_ae['ifscode'] == 171, 'gfn'] = np.nan  # change Andorra to missin
 gfn_emde = ecos.inlist('ifscode', dum.emde).inlist('year', curr_year)
 
 gfn_emde.loc[gfn_emde['ifscode']==228, 'ggds'] = 7548419.923 * 1000000
-# gfn_emde.loc[gfn_emde['ifscode']==228, 'ggei'] = 0
 
 gfn_emde['deficit'] = - gfn_emde['ggxcnl'] / gfn_emde['ngdp_fy'] * 100
 gfn_emde['maturing_debt'] = (gfn_emde['ggds'] - gfn_emde['ggei']) / gfn_emde['ngdp_fy'] * 100
