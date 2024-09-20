@@ -2,6 +2,7 @@ import pandas as pd
 import pandaspro as cpd
 from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.ecosdata import EcosData
+from fadfpdata.utils.core import countryname_to_ifs, ifs_to_countryname, iso_to_ifs
 
 fm_version = '2024-10'
 curr_year = int(fm_version[:4])

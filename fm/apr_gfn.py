@@ -1,8 +1,7 @@
-import pandaspro as cpd
 from fadfpdata.fm import *
-from fadfpdata.utils.core import countryname_to_ifs, ifs_to_countryname
+from fadfpdata.myclass.weovintage import WeoVinage
 
-weo
+weo = WeoVinage().v2024
 
 # Gross financing needs: AE - source: Bloomberg + WEO
 ddis = cpd.pwread(r'Q:\DATA\FP\Fiscal Monitor\2024-04-April_Monitor\MSA\Bloomberg\GFNTable_FM_DDIS_FMLive_02222024.xlsx', sheet_name='Mat_Debt%', cellrange='B3:F36')[0]

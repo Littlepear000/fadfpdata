@@ -2,12 +2,8 @@ import pandas as pd
 import re
 from pandaspro.core.frame import FramePro
 from fadfpdata.myclass.dummy import Dummy
+from fadfpdata.utils.core import weighted_avg
 
-
-def weighted_avg(df, indicator):
-    df = df.dropna(subset=[indicator, 'ngdpd'])
-    df_weighted = (df[indicator] * df['ngdpd']).sum() / df['ngdpd'].sum()
-    return df_weighted
 
 def filter_year(df, years: str, ftype: str):
     ftype_dict = {
@@ -45,7 +41,8 @@ class ImfFrame(FramePro):
             return filter_year(self, years=years, ftype=ftype)
         elif item.startswith('vinl'):
             onlykeepyear = int(item[4:])
-            return self.groupby('ifscode').apply(lambda x: x[(x['vintage_year'] == max(x['vintage_year'])) & (x['year'] == onlykeepyear)])
+            return self.groupby('ifscode').apply(
+                lambda x: x[(x['vintage_year'] == max(x['vintage_year'])) & (x['year'] == onlykeepyear)])
         # Inlist with Dummies
         elif item in ['keep2018', 'keep2025']:
             return self.inlist(item.replace('keep', 'roc'), 1)
@@ -80,7 +77,7 @@ class ImfFrame(FramePro):
             df = self.get_latest_available_data(varname)
 
         df = df.dummy.expand_column(group_dummies).dropna(subset=['expand_value']).rename(
-                columns={'expand_value': 'group'})[final_cols].sort_values('group')
+            columns={'expand_value': 'group'})[final_cols].sort_values('group')
         if keep_group:
             df = df[df['group'].isin(keep_group)]
             df['group'] = pd.Categorical(df['group'], categories=keep_group, ordered=True)
@@ -96,9 +93,10 @@ class ImfFrame(FramePro):
             df_mean['group'] = group
             df_append = pd.concat([df_append, df_mean])
         df_wide = df_append.pivot(index='year', columns='group', values=indicator)
+        df_wide = FramePro(df_wide).corder(list(group_dict.keys()))
         return df_wide
 
-    def agg_detail(self, indicator, group_dict):
+    def agg_detail(self):
         pass
 
 

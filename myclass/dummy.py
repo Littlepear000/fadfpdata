@@ -27,7 +27,5 @@ class Dummy(FramePro):
 if __name__ == '__main__':
     from fadfpdata.myclass.country_grouping import CountryGrouping as cg
     a = Dummy()
-    b = cg().get_by_groupcode(200)
-    c = a.inlist('ifscode', b, engine='c', rename='emde').df
-    # b = a.df[['ifscode', 'emde']]
+
 

@@ -33,3 +33,8 @@ def get_latest_file(folder_path, debug=False):
                 timelist.append(timestamp)
     max_time = max(timelist).strftime('%Y%m%d')
     return max_time
+
+def weighted_avg(df, indicator):
+    df = df.dropna(subset=[indicator, 'ngdpd'])
+    df_weighted = (df[indicator] * df['ngdpd']).sum() / df['ngdpd'].sum()
+    return df_weighted

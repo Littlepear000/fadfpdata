@@ -4,15 +4,17 @@ import os
 import re
 import pandaspro as cpd
 from pandaspro import FramePro
-import fadfpdata as spr
+import fadfpdata as fad
+from fadfpdata.myclass.ecosdata import EcosData
+from fadfpdata.myclass.weovintage import WeoVinage
 
 def weighted_avg(group):
     group = group.dropna(subset=['ggxwdg_gdp', 'ngdpd'])
     return (group['ggxwdg_gdp'] * group['ngdpd']).sum() / group['ngdpd'].sum()
 
-ecos = spr.ecos()[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']].query('year >= 2000')
+ecos = EcosData()[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']].query('year >= 2000')
 ecos = ecos[~ecos['ifscode'].isin([111, 924])]
-weovint = spr.weovint().v2010[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']]
+weovint = WeoVinage().v2010[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']]
 
 temp = ecos.groupby('year').apply(weighted_avg).reset_index()
 ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Fiscal Monitor October 2024\Charts and figures\Figure 1.1. Public Debt to GDP ratio, 2000-29.xlsx')
@@ -39,7 +41,7 @@ for year in range(2014, 2025):
         dfvint = pd.read_stata(fr'{res_weovintage_folder}\WEOOct{year}Pub.dta')
         dfvint['vintage'] = f'Oct{year}'
 
-    dfvint = dfvint[dfvint['ifscode'].isin(wo_aggregate)][dfvint['year']>=2000]
+    dfvint = dfvint[dfvint['ifscode'].isin(wo_aggregate)][dfvint['year'] >= 2000]
     df = pd.concat([df, dfvint], ignore_index=True)
 
 result = df.groupby(['vintage', 'year']).apply(weighted_avg).reset_index().pivot(index='vintage',
@@ -58,4 +60,4 @@ result2007 = df2007.groupby(['vintage', 'year']).apply(weighted_avg).reset_index
 
 final = pd.concat([result,result2007])
 ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Charts and figures\Global Debt to GDP chart.xlsx')
-ps.putxl(final, 'data_manual', 'A1', index=True)
+# ps.putxl(final, 'data_manual', 'A1', index=True)

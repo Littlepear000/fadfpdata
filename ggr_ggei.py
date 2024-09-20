@@ -1,6 +1,7 @@
 import pandas as pd
 from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.ecosdata import EcosData
+from fadfpdata.utils.core import *
 import pandaspro as cpd
 from pandaspro import CellPro
 
