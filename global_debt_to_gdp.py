@@ -13,6 +13,12 @@ def weighted_avg(group):
     return (group['ggxwdg_gdp'] * group['ngdpd']).sum() / group['ngdpd'].sum()
 
 ecos = EcosData()[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']].query('year >= 2000')
+ecos_wide = ecos.pivot(index='ifscode',
+                       columns='year',
+                       values='ggxwdg_gdp').reset_index()
+ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Fiscal Monitor October 2024\Charts and figures\Figure 1.1. Public Debt to GDP ratio, 2000-29.xlsx')
+ps.putxl(temp.drop('year', axis=1), sheet_name='C_GLOBAL', cell='U7', index=False, header=False)
+
 ecos = ecos[~ecos['ifscode'].isin([111, 924])]
 weovint = WeoVinage().v2010[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']]
 

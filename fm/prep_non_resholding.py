@@ -1,3 +1,4 @@
+import numpy as np
 from fadfpdata.fm import *
 from imf_datatools import worldbank_utilities
 
@@ -18,3 +19,6 @@ wbdata = wbdata.loc[wbdata.groupby(['iso', 'ifscode'])['dates'].idxmax()]
 nrh = ecos[['ifscode', 'year', 'ggxwdg', 'ende']].merge(wbdata, on=['ifscode', 'year'], how='right')
 nrh['nrh'] = nrh['ext_debt'] * nrh['ende'] / nrh['ggxwdg'] * 100
 nrh = nrh[['ifscode', 'nrh']]
+
+## Manual changes
+nrh.loc[nrh['ifscode'] == 622, 'nrh'] = np.nan  # Cameroon excluded due to large drop, country team still investigating

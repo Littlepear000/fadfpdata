@@ -123,15 +123,5 @@ class EcosSet:
             return data
 
 if __name__ == '__main__':
-    a = EcosSet(f'{folder_ecos}/templates/template_20240918.xlsx')
+    a = EcosSet(f'{folder_ecos}/templates/template_20240925.xlsx')
     a.pull(export=True)
-    # wdi_dict = {
-    #     'Database 1': {
-    #         'dbname': 'ECDATA_WB_WDI',
-    #         'clist': [111, 112],
-    #         'indlist': ['NY.GDP.PCAP.PP.KD', 'SI.POV.GINI'],
-    #         'freq': 'A',
-    #         'start': 2000,
-    #         'end': 2020
-    #     }}
-    # b = myecosuse(wdi_dict)

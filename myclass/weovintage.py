@@ -17,14 +17,12 @@ class WeoVinage(ImfFrame):
             raw = pd.read_csv(f'{folder_vintage}/WEOvintages_{local_version}.csv')
             super().__init__(raw)
 
-        self.idvar = ['ifscode', 'vintage_year', 'year']
-
     @property
     def _constructor(self):
         return WeoVinage
 
     def keep_var(self, varlist: str):
-        keeplist = '; '.join(self.idvar) + '; ' + varlist
+        keeplist = '; '.join(['ifscode', 'vintage_year', 'year']) + '; ' + varlist
         return self.br(keeplist)
 
 
