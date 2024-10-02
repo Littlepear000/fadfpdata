@@ -123,5 +123,5 @@ class EcosSet:
             return data
 
 if __name__ == '__main__':
-    a = EcosSet(f'{folder_ecos}/templates/template_20240925.xlsx')
+    a = EcosSet(f'{folder_ecos}/templates/template_20241002.xlsx')
     a.pull(export=True)

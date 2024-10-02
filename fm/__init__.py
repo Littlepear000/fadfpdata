@@ -11,7 +11,7 @@ fm_folder = f'{fm_version}-October_Monitor' if curr_mon == 10 else f'{fm_version
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
 blmbg_update_date = '20240917'
-weo_update_date = '20240925'
+weo_update_date = '20241002'
 
 ecos = EcosData()
 dum = Dummy()
