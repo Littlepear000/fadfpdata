@@ -1,36 +1,25 @@
 import xlwings as xw
 
+def test(file_path):
 
-table1_22 = r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Shelley_My Projects\Fiscal Monitor\202410\MSA\test.xlsm'
-wb = xw.Book(table1_22)
+    wb = xw.Book(file_path)
+    wb.app.visible = True
 
-
-def convert_formulas_to_values(output_date):
-    wb = xw.Book(table1_22)
-
-    new_file_path = fr'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Shelley_My Projects\Fiscal Monitor\202410\MSA\MSA_{output_date}.xlsx'
-    wb.save(new_file_path)
-
-    # 重新打开新文件，确保对副本进行操作
-    new_wb = xw.Book(new_file_path)
-
+    # 遍历所有工作表
     for sheet in wb.sheets:
-        for cell in sheet.used_range:
-            if cell.formula:
-                cell.value = cell.value
+        start_cell = sheet.range("D6")
+        last_cell = sheet.range("D100").end('up').end('right')  # 找到最后一个有内容的单元格
 
+        # 根据起始单元格和结束单元格定义有效范围
+        table_range = sheet.range(start_cell, last_cell)
+
+        # 复制从 D6 开始的表格区域
+        table_range.api.Copy()
+
+        # 粘贴到 D6，并将粘贴选项设置为仅保留值 (-4163 = xlPasteValues)
+        sheet.range("D6").api.PasteSpecial(Paste=-4163)
     wb.save()
 
 
-# def convert_formulas_to_values(file_path):
-#     wb = xw.Book(file_path)
-#
-#     # 遍历所有工作表
-#     for sheet in wb.sheets:
-#         # 选择整个工作表
-#         sheet.api.UsedRange.Copy()  # 复制工作表中使用过的区域
-#         sheet.api.UsedRange.PasteSpecial(Paste=-4163)  # 粘贴时仅保留值 (-4163 = xlPasteValues)
-
-
 if __name__ == '__main__':
-    convert_formulas_to_values('20241008')
+    test(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Shelley_My Projects\Fiscal Monitor\202410\MSA\MSA_20241009.xlsx')

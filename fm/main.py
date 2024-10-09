@@ -6,8 +6,8 @@ from fadfpdata.fm.prep_rlessg import rlessg
 from fadfpdata.fm.prep_to_maturity import d_to_m
 from fadfpdata.fm.prep_non_resholding import nrh
 
-
 def weighted_avg(group, indicator):
+    group = group.dropna(subset=[indicator, 'ngdp_fy_usd'])
     return (group[indicator] * group['ngdp_fy_usd']).sum() / group['ngdp_fy_usd'].sum()
 
 ngdpd_fy = ecos.query(f'year == {curr_year}')[['ifscode', 'ngdp_fy_usd']]
@@ -51,7 +51,7 @@ final_table.loc[final_table['country'].isin(pre_pan_cnl_dict.keys()), 'pre_pan_c
 
 stat23_25_dict = {
     'STAT23': 'B3:B42',
-    'STAT24': 'B3:B46',
+    'STAT24': 'B3:B47',
     'STAT25': 'B3:B43',
 }
 
