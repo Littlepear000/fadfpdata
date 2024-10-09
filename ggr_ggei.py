@@ -21,7 +21,7 @@ inc_dict = {
     'Emerging Market and Developing Economies': dum.emde,
 }
 
-final = df.create_aggregate('ggei_ggr', inc_dict)
+final = df.agg_mean('ggei_ggr', inc_dict)
 ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Fiscal Monitor October 2024\Charts and figures\Figure 1.17-B Interest Payments to Revenues.xlsx')
 ps.putxl(final, sheet_name='chart_clean', cell='A1', header=True, index=True)
 

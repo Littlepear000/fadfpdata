@@ -1,37 +1,9 @@
-import xlwings as xw
 
-
-# 打开指定的 Excel 文件
-file_path = r'C:\Users\xli7\Desktop\MSA_1004.xlsx'
-wb = xw.Book(file_path)
-
-# 遍历所有工作表，并修改名称
-for sheet in wb.sheets:
-    # 检查工作表名称中是否包含 'Sheet'
-    if 'Sheet' in sheet.name:
-        # 替换 'Sheet' 为 'STAT'
-        new_name = sheet.name.replace('Sheet', 'STAT')
-        # 设置工作表的新名称
-        sheet.name = new_name
-
-
-def convert_formulas_to_values(file_path):
-    wb = xw.Book(file_path)
-
-    # 遍历所有工作表
-    for sheet in wb.sheets:
-        # 选择整个工作表
-        sheet.api.UsedRange.Copy()  # 复制工作表中使用过的区域
-        sheet.api.UsedRange.PasteSpecial(Paste=-4163)  # 粘贴时仅保留值 (-4163 = xlPasteValues)
-
-
-# 示例用法
-convert_formulas_to_values(file_path)
 
 
 # 定义文件路径
-file_path_old = r'C:\Users\xli7\Desktop\MSA_0925.xlsx'
-file_path_new = r'C:\Users\xli7\Desktop\MSA_1004_2.xlsx'
+file_path_old = r'C:\Users\xli7\Desktop\MSA_1004_2.xlsx'
+file_path_new = r'Q:\DATA\FP\Fiscal Monitor\2024-10-October_Monitor\MSA\FM_October_2024_Methodological and Statistical Appendix_20241008.xlsx'
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import Font
@@ -60,6 +32,6 @@ for sheet_name in wb1.sheetnames:
             else:
                 cell2.font = Font(color="000000")
 # Save the modified workbook
-output_path = r"C:\Users\xli7\Desktop\MSA_1004_modified.xlsx"
+output_path = r"C:\Users\xli7\Desktop\MSA_1008_modified.xlsx"
 wb2.save(output_path)
 

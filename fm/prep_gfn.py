@@ -3,7 +3,7 @@ import numpy as np
 
 # Gross financing needs: AE - source: Bloomberg + WEO
 ddis = cpd.pwread(fr'{input_folder}/Bloomberg_DDIS_AE_{blmbg_update_date}.xlsx', sheet_name='Mat_Debt%', cellrange='B3:F36')[0]
-ddis['ifscode'] = ddis['country'].map(countryname_to_ifs)
+ddis['ifscode'] = ddis['country'].map(cname_to_ifs)
 for year in range(curr_year, curr_year+4):
     ddis[str(year)] = ddis[str(year)]*10**6
 ddis = ddis.melt(id_vars=['country', 'ifscode'],
@@ -29,10 +29,21 @@ gfn = pd.concat([gfn_ae, gfn_emde]).sort_values('ifscode')
 
 # Gross financing needs: source: additional amortization data from country desk
 desk = cpd.pwread(fr'{input_folder}/Additional country desk data on amortization.xlsx')[0]
-desk['ifscode'] = desk['country'].map(countryname_to_ifs)
+desk['ifscode'] = desk['country'].map(cname_to_ifs)
 amort_map = desk.cpdmap_ifscode__amort
 for ifs, amort in amort_map.items():
     gfn.loc[gfn['ifscode'] == ifs, 'maturing_debt'] = amort
 
 gfn['gfn'] = gfn['deficit'] + gfn['maturing_debt']
-gfn.loc[gfn['ifscode'] == 171, 'gfn'] = np.nan  # change Andorra to missing
+
+# Country that do not show GFN numbers
+hide_list = ['Andorra', 'Hong Kong', 'Israel', 'Luxembourg', 'Norway']
+for country in hide_list:
+    gfn.loc[gfn['ifscode'] == cname_to_ifs[country], 'gfn'] = np.nan
+
+# gfn.loc[gfn['ifscode'] == 171, 'gfn'] = np.nan  # change Andorra to missing
+# gfn.loc[gfn['ifscode'] == 532, 'gfn'] = np.nan  # change Hong Kong to missing
+# gfn.loc[gfn['ifscode'] == 436, 'gfn'] = np.nan  # change Israel to missing
+# gfn.loc[gfn['ifscode'] == 137, 'gfn'] = np.nan  # change Luxembourg to missing
+# gfn.loc[gfn['ifscode'] == 142, 'gfn'] = np.nan  # change Norway to missing
+

@@ -49,16 +49,28 @@ final_table = pd.concat([agg_all, table.drop('ifscode', axis=1)])[col_ren.keys()
 final_table.loc[final_table['country'].isin(group_dict.keys()), 'nfw'] = ''
 final_table.loc[final_table['country'].isin(pre_pan_cnl_dict.keys()), 'pre_pan_cnl'] = final_table['country'].map(pre_pan_cnl_dict)
 
-# Export
-ae_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0].rename(columns={'unnamed_1': 'country'})
-em_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-24', cellrange='B3:B46')[0].rename(columns={'unnamed_1': 'country'})
-lic_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-25', cellrange='B3:B43')[0].rename(columns={'unnamed_1': 'country'})
-
-ae_final = ae_order.merge(final_table, on='country', how='left')
-em_final = em_order.merge(final_table, on='country', how='left')
-lic_final = lic_order.merge(final_table, on='country', how='left')
+stat23_25_dict = {
+    'STAT23': 'B3:B42',
+    'STAT24': 'B3:B46',
+    'STAT25': 'B3:B43',
+}
 
 ps = cpd.PutxlSet(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx')
-ps.putxl(ae_final.drop('country', axis=1), sheet_name='STAT-23', cell='C4', header=False, index=False)
-ps.putxl(em_final.drop('country', axis=1), sheet_name='STAT-24', cell='C4', header=False, index=False)
-ps.putxl(lic_final.drop('country', axis=1), sheet_name='STAT-25', cell='C4', header=False, index=False)
+for sheet, cellrange in stat23_25_dict.items():
+    country_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name=sheet, cellrange=cellrange)[0].rename(columns={'unnamed_1': 'country'})
+    table_final = country_order.merge(final_table, on='country', how='left')
+    ps.putxl(table_final.drop('country', axis=1), sheet_name=sheet, cell='C4', header=False, index=False)
+
+# # Export
+# ae_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-23', cellrange='B3:B42')[0].rename(columns={'unnamed_1': 'country'})
+# em_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-24', cellrange='B3:B46')[0].rename(columns={'unnamed_1': 'country'})
+# lic_order = cpd.pwread(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx', sheet_name='STAT-25', cellrange='B3:B43')[0].rename(columns={'unnamed_1': 'country'})
+#
+# ae_final = ae_order.merge(final_table, on='country', how='left')
+# em_final = em_order.merge(final_table, on='country', how='left')
+# lic_final = lic_order.merge(final_table, on='country', how='left')
+#
+# ps = cpd.PutxlSet(fr'{output_folder}\StatTab23-24-25_FMOct2024_{weo_update_date}.xlsx')
+# ps.putxl(ae_final.drop('country', axis=1), sheet_name='STAT-23', cell='C4', header=False, index=False)
+# ps.putxl(em_final.drop('country', axis=1), sheet_name='STAT-24', cell='C4', header=False, index=False)
+# ps.putxl(lic_final.drop('country', axis=1), sheet_name='STAT-25', cell='C4', header=False, index=False)

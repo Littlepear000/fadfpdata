@@ -1,8 +1,9 @@
 import pandas as pd
+import numpy as np
 import pandaspro as cpd
 from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.ecosdata import EcosData
-from fadfpdata.utils.core import countryname_to_ifs, ifs_to_countryname, iso_to_ifs
+from fadfpdata.utils.core import cname_to_ifs, ifs_to_countryname, iso_to_ifs
 
 fm_version = '2024-10'
 curr_year = int(fm_version[:4])
@@ -10,8 +11,8 @@ curr_mon = int(fm_version[-2:])
 fm_folder = f'{fm_version}-October_Monitor' if curr_mon == 10 else f'{fm_version}-April_Monitor'
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
-blmbg_update_date = '20240917'
-weo_update_date = '20241004'
+blmbg_update_date = '20241008'
+weo_update_date = '20241008'
 
 ecos = EcosData()
 dum = Dummy()

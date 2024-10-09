@@ -7,7 +7,7 @@ from fadfpdata import onedrive_root
 countrycode_file = fr'{onedrive_root}\0_tools\Country Code & Template\Country Code & Grouping\Country Codes.xlsx'
 country_name2code = pd.read_excel(countrycode_file, sheet_name='name_to_code')
 country_name2code.loc[country_name2code['ifscode'] == 728, 'iso2'] = 'NA'
-countryname_to_ifs = {row['country']: int(row['ifscode']) for index, row in country_name2code.iterrows()}
+cname_to_ifs = {row['country']: int(row['ifscode']) for index, row in country_name2code.iterrows()}
 countryname_to_iso = {row['country']: row['iso3'] for index, row in country_name2code.iterrows()}
 countryname_to_iso2 = {row['country']: row['iso2'] for index, row in country_name2code.iterrows()}
 

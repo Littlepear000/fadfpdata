@@ -5,7 +5,7 @@ weo = WeoVinage().v2024
 
 # Gross financing needs: AE - source: Bloomberg + WEO
 ddis = cpd.pwread(r'Q:\DATA\FP\Fiscal Monitor\2024-04-April_Monitor\MSA\Bloomberg\GFNTable_FM_DDIS_FMLive_02222024.xlsx', sheet_name='Mat_Debt%', cellrange='B3:F36')[0]
-ddis['ifscode'] = ddis['country'].map(countryname_to_ifs)
+ddis['ifscode'] = ddis['country'].map(cname_to_ifs)
 for year in range(curr_year, curr_year+4):
     ddis[str(year)] = ddis[str(year)]*10**6
 ddis = ddis.melt(id_vars=['country', 'ifscode'],
