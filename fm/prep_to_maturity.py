@@ -6,7 +6,13 @@ maturity_raw.columns = ['country', 'years_to_maturity']
 maturity_raw['ifscode'] = maturity_raw['country'].map(cname_to_ifs)
 maturity = maturity_raw.dropna(subset='ifscode')[['ifscode', 'years_to_maturity']]
 
-maturity.loc[maturity['ifscode'] == 532, 'years_to_maturity'] = np.nan  # change Hong Kong to missing
+# Countries to be excluded
+hide_list = ['Hong Kong', 'Lebanon', 'Sri Lanka']
+for country in hide_list:
+    maturity.loc[maturity['ifscode'] == cname_to_ifs[country], 'years_to_maturity'] = np.nan
+
+# maturity.loc[maturity['ifscode'] == 532, 'years_to_maturity'] = np.nan  # change Hong Kong to missing
+# maturity.loc[maturity['ifscode'] == 446, 'years_to_maturity'] = np.nan  # change Lebanon to missing
 
 # Debt to average maturity - source: Bloomberg + WEO
 weo_debt = ecos[['ifscode', 'year', 'ggxwdg_gdp']].inlist('year', curr_year)

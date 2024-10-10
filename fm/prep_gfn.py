@@ -36,7 +36,7 @@ for ifs, amort in amort_map.items():
 
 gfn['gfn'] = gfn['deficit'] + gfn['maturing_debt']
 
-# Country that do not show GFN numbers
+# Countries to be excluded
 hide_list = ['Andorra', 'Hong Kong', 'Israel', 'Luxembourg', 'Norway']
 for country in hide_list:
     gfn.loc[gfn['ifscode'] == cname_to_ifs[country], 'gfn'] = np.nan
