@@ -2,11 +2,11 @@ from openpyxl import load_workbook
 from openpyxl.styles import Font
 
 msa_qdrive = r'Q:\DATA\FP\Fiscal Monitor\2024-10-October_Monitor\MSA'
-old_date = '20241004'
-new_date = '20241010'
+old_date = '20241010'
+new_date = '20241017'
 
 wb1 = load_workbook(fr'{msa_qdrive}\MSA_{old_date}.xlsx')
-wb2 = load_workbook(fr'{msa_qdrive}\MSA_{new_date}.xlsx')
+wb2 = load_workbook(fr'{msa_qdrive}\Copy of MSA_{new_date}.xlsx')
 
 for sheet_name in wb1.sheetnames:
     sheet1 = wb1[sheet_name]
@@ -29,4 +29,6 @@ for sheet_name in wb1.sheetnames:
                 cell2.font = Font(color="000000")
 output_path = fr'{msa_qdrive}\FM_October_2024_Methodological and Statistical Appendix_{new_date}.xlsx'
 wb2.save(output_path)
+wb1.close()
+wb2.close()
 

@@ -2,7 +2,7 @@ import numpy as np
 from fadfpdata.fm import *
 from imf_datatools import worldbank_utilities
 
-# Non-resident holding
+# Non-resident holding: no changes after WEO frozen, need to revise code for frozen version
 # meta = worldbank_utilities.get_all_worldbank_metadata()
 series = 'DT.DOD.DECT.CD.GG.AR.US'
 wbdata = worldbank_utilities.get_worldbank_data(series, 'all', longformat=True).rename(columns={

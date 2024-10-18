@@ -34,7 +34,18 @@ def get_latest_file(folder_path, debug=False):
     max_time = max(timelist).strftime('%Y%m%d')
     return max_time
 
-def weighted_avg(df, indicator):
-    df = df.dropna(subset=[indicator, 'ngdpd'])
-    df_weighted = (df[indicator] * df['ngdpd']).sum() / df['ngdpd'].sum()
+def weighted_avg(df, indicator, weight='ngdpd'):
+    df = df.dropna(subset=[indicator, weight])
+    df_weighted = (df[indicator] * df[weight]).sum() / df[weight].sum()
     return df_weighted
+
+if __name__ == '__main__':
+    # Sample data to test the weighted_avg function
+    data = {
+        'indicator': [5.5, 7.2, 6.8, None, 8.1],
+        'ngdpd': [300, 450, 500, 200, 600]
+    }
+
+    # Create DataFrame
+    df_sample = pd.DataFrame(data)
+    test = df_sample.apply(lambda x: weighted_avg())

@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from pandaspro.core.frame import FramePro
 from fadfpdata.myclass.dummy import Dummy
-from fadfpdata.utils.core import weighted_avg
+from fadfpdata.utils.core import weighted_avg, ifs_to_countryname
 
 
 def filter_year(df, years: str, ftype: str):
@@ -56,6 +56,12 @@ class ImfFrame(FramePro):
         countrydummy = Dummy()
         return pd.merge(self, countrydummy, on='ifscode', how='left')
 
+    @property
+    def add_cname(self):
+        newdf = self.copy()
+        newdf['country'] = newdf['ifscode'].map(ifs_to_countryname)
+        return newdf.corder('country')
+
     def get_latest_available_data(self, varname: str):
         filtered_df = self.dropna(subset=[varname])
         latest_df = filtered_df.sort_values('year').groupby('ifscode').tail(1)
@@ -84,12 +90,23 @@ class ImfFrame(FramePro):
             df = df.sort_values('group').reset_index(drop=True)
         return df
 
-    def agg_mean(self, indicator, group_dict):
+    def agg_mean(self, indicator, group_dict, weight='ngdpd'):
         df_append = pd.DataFrame()
         for group, gr_list in group_dict.items():
             filtered_df = self.inlist('ifscode', gr_list)
-            df_mean = filtered_df.groupby('year').apply(lambda x: weighted_avg(x, indicator)).reset_index().rename(
+            df_mean = filtered_df.groupby('year').apply(lambda x: weighted_avg(x, indicator, weight=weight)).reset_index().rename(
                 columns={0: indicator})
+            df_mean['group'] = group
+            df_append = pd.concat([df_append, df_mean])
+        df_wide = df_append.pivot(index='year', columns='group', values=indicator)
+        df_wide = FramePro(df_wide).corder(list(group_dict.keys()))
+        return df_wide
+
+    def agg_median(self, indicator, group_dict):
+        df_append = pd.DataFrame()
+        for group, gr_list in group_dict.items():
+            filtered_df = self.inlist('ifscode', gr_list)
+            df_mean = filtered_df.groupby('year').agg({indicator: 'median'}).reset_index()
             df_mean['group'] = group
             df_append = pd.concat([df_append, df_mean])
         df_wide = df_append.pivot(index='year', columns='group', values=indicator)
