@@ -1,4 +1,3 @@
-import numpy as np
 from fadfpdata.fm import *
 from fadfpdata.myclass.nrh import Nrh
 

@@ -18,7 +18,9 @@ df_oct = ImfFrame(pd.read_stata(fr'{res_weovintage_folder}\WEOOct2024Pub.dta'))
 
 df = df_jul[['ifscode', 'year', 'ngdpd', 'ngdp_fy', 'ggr_gdp', 'ggei_gdp', 'ggei', 'ggr', 'ggropi', 'enda']].query('year >= 2000')
 df['ggr_d'] = df['ggr'] / df['enda']
-df['ggei_ggr'] = df['ggei_gdp'] / df['ggr_gdp'] * 100
+df['ggei_d'] = df['ggei'] / df['enda']
+
+df['ggei_ggr'] = df['ggei_d'] / df['ggr_d'] * 100
 df['ggei_ggr_net'] = (df['ggei'] - df['ggropi']) / df['ggr'] * 100
 # df['ggei_ggr_combine']
 
@@ -37,6 +39,11 @@ inc_dict2 = {
     'G7': dum.g7,
 }
 
+df_sum = ImfFrame({'year': df['year'].unique()})
+for cgroup, clist in inc_dict.items():
+    group_sum = df.inlist('ifscode', clist).groupby('year')[['ggei_d', 'ggr_d']].sum(['ggei_d', 'ggr_d']).reset_index()
+    group_sum = group_sum.rename(columns={'ggei_d': f'{cgroup}_ggei_d', 'ggr_d': f'{cgroup}_ggr_d'})
+    df_sum = df_sum.merge(group_sum, on='year')
 final = ImfFrame(df).agg_mean('ggei_ggr', inc_dict, weight='ggr_d')
 
 ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Shelley_Ad hoc\FADFP\202410 - Interest-to-revenue chart with different vintage\2024OctFM_Figure 1.17-B Interest Payments to Revenues.xlsx')
