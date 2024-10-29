@@ -1,5 +1,7 @@
 import pandas as pd
+import pandaspro as cpd
 import re
+from pandaspro import CellPro
 from pandaspro.core.frame import FramePro
 from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.utils.core import weighted_avg, ifs_to_countryname, inc_dict
@@ -94,7 +96,8 @@ class ImfFrame(FramePro):
         df_append = pd.DataFrame()
         for group, gr_list in group_dict.items():
             filtered_df = self.inlist('ifscode', gr_list)
-            df_mean = filtered_df.groupby('year').apply(lambda x: weighted_avg(x, indicator, weight=weight)).reset_index().rename(
+            df_mean = filtered_df.groupby('year').apply(
+                lambda x: weighted_avg(x, indicator, weight=weight)).reset_index().rename(
                 columns={0: indicator})
             df_mean['group'] = group
             df_append = pd.concat([df_append, df_mean])
@@ -113,8 +116,46 @@ class ImfFrame(FramePro):
         df_wide = FramePro(df_wide).corder(list(group_dict.keys()))
         return df_wide
 
-    def agg_detail(self):
-        pass
+    def export_agg_detail(
+            self,
+            indicator: str,
+            excel_file: str,
+            sheet_name: str,
+            group_dict: dict = inc_dict,
+            weight: str = 'ngdpd',
+            start_cell: str = 'A1',
+            direction: str = 'right',
+    ):
+        output = pd.DataFrame()
+        ps = cpd.PutxlSet(excel_file)
+        ps.tab(sheet_name)
+
+        for group, list in group_dict.items():
+
+            filtered_df = self[self['ifscode'].isin(list)]
+            result = filtered_df.groupby('year').agg(
+                mean=(indicator, 'mean'),
+                weighted_avg=(indicator, lambda x: weighted_avg(filtered_df.loc[x.index], indicator, weight=weight)),
+                median=(indicator, 'median'),
+                p25=(indicator, lambda x: x.quantile(0.25)),
+                p75=(indicator, lambda x: x.quantile(0.75)),
+                p10=(indicator, lambda x: x.quantile(0.1)),
+                p90=(indicator, lambda x: x.quantile(0.9)),
+            ).reset_index()
+            result['interquartile'] = result['p75'] - result['p25']
+            result['10-90th'] = result['p90'] - result['p10']
+
+            result_copy = cpd.FramePro(result.copy())
+            result_copy['group'] = group
+            result_copy = result_copy.corder('group')
+            output = pd.concat([output, result_copy])
+
+            ps.putxl(group, cell=CellPro(start_cell).offset(-1, 0).cell)
+            ps.putxl(result, cell=start_cell, index=False)
+            if direction == 'right':
+                start_cell = CellPro(ps.next_cell_right.cell).offset(0, 2).cell
+            elif direction == 'down':
+                start_cell = CellPro(ps.next_cell_down.cell).offset(3, 0).cell
 
 
 if __name__ == '__main__':
