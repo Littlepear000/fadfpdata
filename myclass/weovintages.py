@@ -4,7 +4,7 @@ from fadfpdata.downloads.weovintage import folder_vintage
 from fadfpdata.utils.core import get_latest_file
 
 
-class WeoVinage(ImfFrame):
+class WeoVinages(ImfFrame):
     def __init__(self,
                  *args,
                  version='latest',
@@ -19,7 +19,7 @@ class WeoVinage(ImfFrame):
 
     @property
     def _constructor(self):
-        return WeoVinage
+        return WeoVinages
 
     def keep_var(self, varlist: str):
         keeplist = '; '.join(['ifscode', 'vintage_year', 'year']) + '; ' + varlist
@@ -27,7 +27,7 @@ class WeoVinage(ImfFrame):
 
 
 if __name__ == '__main__':
-    a = WeoVinage(version='latest')
+    a = WeoVinages(version='latest')
     b = a.y2005
 
     # years = (2006, 2008)

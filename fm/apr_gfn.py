@@ -1,7 +1,7 @@
 from fadfpdata.fm import *
-from fadfpdata.myclass.weovintage import WeoVinage
+from fadfpdata.myclass.weovintages import WeoVinages
 
-weo = WeoVinage().v2024
+weo = WeoVinages().v2024
 
 # Gross financing needs: AE - source: Bloomberg + WEO
 ddis = cpd.pwread(r'Q:\DATA\FP\Fiscal Monitor\2024-04-April_Monitor\MSA\Bloomberg\GFNTable_FM_DDIS_FMLive_02222024.xlsx', sheet_name='Mat_Debt%', cellrange='B3:F36')[0]

@@ -3,6 +3,21 @@ import os
 import re
 import pandas as pd
 from fadfpdata import onedrive_root
+from fadfpdata.myclass.dummy import Dummy
+
+dum = Dummy()
+inc_dict = {
+    'Global': dum.noagg,
+    'Advanced Economies': dum.ae,
+    'Emerging Market': dum.em,
+    'Low-Income Developing Markets': dum.lic,
+    'Emerging Market and Developing Economies': dum.emde,
+    'Emerging Market and Developing Economies excl. China': dum.emde_nochina,
+    'Advanced Economies excl. US': dum.ae_nous,
+    'Emerging Market excl. China': dum.em_nochina,
+    'United States': [111],
+    'China': [924]
+}
 
 countrycode_file = fr'{onedrive_root}\0_tools\Country Code & Template\Country Code & Grouping\Country Codes.xlsx'
 country_name2code = pd.read_excel(countrycode_file, sheet_name='name_to_code')

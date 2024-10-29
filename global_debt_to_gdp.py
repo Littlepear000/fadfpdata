@@ -6,7 +6,7 @@ import pandaspro as cpd
 from pandaspro import FramePro
 import fadfpdata as fad
 from fadfpdata.myclass.ecosdata import EcosData
-from fadfpdata.myclass.weovintage import WeoVinage
+from fadfpdata.myclass.weovintages import WeoVinages
 
 def weighted_avg(group):
     group = group.dropna(subset=['ggxwdg_gdp', 'ngdpd'])
@@ -20,7 +20,7 @@ ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\F
 ps.putxl(temp.drop('year', axis=1), sheet_name='C_GLOBAL', cell='U7', index=False, header=False)
 
 ecos = ecos[~ecos['ifscode'].isin([111, 924])]
-weovint = WeoVinage().v2010[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']]
+weovint = WeoVinages().v2010[['ifscode', 'year', 'ggxwdg_gdp', 'ngdpd']]
 
 temp = ecos.groupby('year').apply(weighted_avg).reset_index()
 ps = cpd.PutxlSet(r'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Fiscal Monitor October 2024\Charts and figures\Figure 1.1. Public Debt to GDP ratio, 2000-29.xlsx')

@@ -8,34 +8,12 @@ from fadfpdata.downloads import ecos_root
 wo_aggregate = dum.Dummy().noagg
 
 folder_vintage = f'{ecos_root}/WEOvintages'
-
-vintagelist = [
-    'WEO_WEOApr2000Pub',
-    'WEO_WEOApr2001Pub',
-    'WEO_WEOApr2002Pub',
-    'WEO_WEOApr2003Pub',
-    'WEO_WEOApr2004Pub',
-    'WEO_WEOApr2005Pub',
-    'WEO_WEOApr2006Pub',
-    'WEO_WEOApr2007Pub',
-    'WEO_WEOApr2008Pub',
-    'WEO_WEOApr2009Pub',
-    'WEO_WEOApr2010Pub',
-    'WEO_WEOApr2011Pub',
-    'WEO_WEOApr2012Pub',
-    'WEO_WEOApr2013Pub',
-    'WEO_WEOApr2014Pub',
-    'WEO_WEOApr2015Pub',
-    'WEO_WEOApr2016Pub',
-    'WEO_WEOApr2017Pub',
-    'WEO_WEOApr2018Pub',
-    'WEO_WEOApr2019Pub',
-    'WEO_WEOApr2020Pub',
-    'WEO_WEOApr2021Pub',
-    'WEO_WEOApr2022Pub',
-    'WEO_WEOApr2023Pub',
-    'WEO_WEOApr2024Pub',
-]
+year_range = range(2000, 2025)
+months = ['Jan', 'Apr', 'Jul', 'Oct']
+vintagelist = []
+for year in year_range:
+    for month in months:
+        vintagelist.append(f'WEO_WEO{month}{year}Pub')
 
 varlist = [
     "ENDA",
@@ -48,6 +26,7 @@ varlist = [
     "GGEI_GDP",
     "GGR",
     "GGR_GDP",
+    "GGROPI",
     "GGX",
     "GGX_GDP",
     "GGXCNL",
@@ -60,7 +39,8 @@ varlist = [
     "NGDP",
     "NGDPD",
     "NGDP_FY",
-    "NGDP_FY_USD"
+    "NGDP_FY_USD",
+    "LP"
 ]
 
 # This process takes about 10-15min
@@ -70,10 +50,12 @@ def pull_vintage(var_list):
     df = pd.DataFrame()
     for database in vintagelist:
         print(database)
+        vintage_month = database[7:10]
+        vintage_year = database[10:14]
         dfweo = imf_datatools.get_ecos_sdmx_data(database, wo_aggregate, var_list, freq='A', longformat=True)
         if not isinstance(dfweo, pd.DataFrame):
             continue
-        dfweo['vintage_year'] = int(database[10:14])
+        dfweo['vintage_year'] = vintage_year + vintage_month
         df = pd.concat([df, dfweo], ignore_index=True)
         
     df['year'] = df['dates'].dt.year

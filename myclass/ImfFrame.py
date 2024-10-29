@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from pandaspro.core.frame import FramePro
 from fadfpdata.myclass.dummy import Dummy
-from fadfpdata.utils.core import weighted_avg, ifs_to_countryname
+from fadfpdata.utils.core import weighted_avg, ifs_to_countryname, inc_dict
 
 
 def filter_year(df, years: str, ftype: str):
@@ -90,7 +90,7 @@ class ImfFrame(FramePro):
             df = df.sort_values('group').reset_index(drop=True)
         return df
 
-    def agg_mean(self, indicator, group_dict, weight='ngdpd'):
+    def agg_mean(self, indicator, group_dict=inc_dict, weight='ngdpd'):
         df_append = pd.DataFrame()
         for group, gr_list in group_dict.items():
             filtered_df = self.inlist('ifscode', gr_list)
