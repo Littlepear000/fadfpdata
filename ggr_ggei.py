@@ -1,15 +1,9 @@
-import pandas as pd
-from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.ecosdata import EcosData
 from fadfpdata.utils.core import *
 import pandaspro as cpd
-from pandaspro import CellPro
 from fadfpdata.myclass.ImfFrame import ImfFrame
 from fadfpdata.myclass.weovint import WeoVint
 
-# def weighted_avg(group, indicator):
-#     group = group.dropna(subset=[indicator, 'ngdpd'])
-#     return (group[indicator] * group['ngdpd']).sum() / group['ngdpd'].sum()
 
 dum = Dummy()
 ecos = EcosData()
@@ -23,6 +17,7 @@ df['ggei_d'] = df['ggei'] / df['enda']
 df['ggei_ggr'] = df['ggei'] / df['ggr'] * 100
 df['ggei_ggr_net'] = (df['ggei'] - df['ggropi']) / df['ggr'] * 100
 
+# net income
 inc_dict2 = {
     'United States': [111],
     'G7': dum.g7,
