@@ -32,6 +32,45 @@ def filter_year(df, years: str, ftype: str):
     else:
         raise ValueError('Invalid years input in para')
 
+def gen_forecast_error(
+        df,
+        vintage_data,
+        indicator: str | list,
+        vintage_year: str ='T-1',
+        vintage_month: str = 'Oct'
+):
+
+    if isinstance(indicator, str):
+        ind_list = [indicator]
+    else:
+        ind_list = indicator
+
+    if vintage_year == 'T':
+        adj = 0
+    elif vintage_year.startswith('T'):
+        adj = int(vintage_year.replace('T', ''))
+    else:
+        raise ValueError('vintage_year must start with T (eg. T, T-1, T-2)')
+
+    ecos_long = df.melt(id_vars=['ifscode', 'year'],
+                          value_vars=ind_list,
+                          var_name='indicator',
+                          value_name='actual')
+    ecos_long['vintage_year'] = ecos_long['year'] + adj
+
+    weovint_select = vintage_data[vintage_data['vintage_year'].str.contains(vintage_month)]
+    weovint_select['vintage_year'] = weovint_select['vintage_year'].str.replace(vintage_month, '').astype('int')
+    weovint_long = weovint_select.melt(id_vars=['ifscode', 'vintage_year', 'year'],
+                                       value_vars=ind_list,
+                                       var_name='indicator',
+                                       value_name='forecast')
+
+    combine = weovint_long.merge(ecos_long,
+                                 on=['ifscode', 'indicator', 'vintage_year', 'year'],
+                                 how='left')
+    combine['forecast_error'] = combine['forecast'] - combine['actual']
+    final = combine[combine['vintage_year'] == combine['year'] + adj]
+    return final
 
 class ImfFrame(FramePro):
     def __getattr__(self, item):
@@ -94,13 +133,20 @@ class ImfFrame(FramePro):
 
     def agg_mean(self, indicator, group_dict=inc_dict, weight='ngdpd'):
         df_append = pd.DataFrame()
-        for group, gr_list in group_dict.items():
-            filtered_df = self.inlist('ifscode', gr_list)
-            df_mean = filtered_df.groupby('year').apply(
-                lambda x: weighted_avg(x, indicator, weight=weight)).reset_index().rename(
-                columns={0: indicator})
-            df_mean['group'] = group
-            df_append = pd.concat([df_append, df_mean])
+        if weight:
+            for group, gr_list in group_dict.items():
+                filtered_df = self.inlist('ifscode', gr_list)
+                df_mean = filtered_df.groupby('year').apply(
+                    lambda x: weighted_avg(x, indicator, weight=weight)).reset_index().rename(
+                    columns={0: indicator})
+                df_mean['group'] = group
+                df_append = pd.concat([df_append, df_mean])
+        else:
+            for group, gr_list in group_dict.items():
+                filtered_df = self.inlist('ifscode', gr_list)
+                df_mean = filtered_df.groupby('year')[indicator].mean().reset_index().rename(columns={0: indicator})
+                df_mean['group'] = group
+                df_append = pd.concat([df_append, df_mean])
         df_wide = df_append.pivot(index='year', columns='group', values=indicator)
         df_wide = FramePro(df_wide).corder(list(group_dict.keys()))
         return df_wide
@@ -156,6 +202,26 @@ class ImfFrame(FramePro):
                 start_cell = CellPro(ps.next_cell_right.cell).offset(0, 2).cell
             elif direction == 'down':
                 start_cell = CellPro(ps.next_cell_down.cell).offset(3, 0).cell
+
+    def gen_forecast_error_long(
+            self,
+            vintage_data: pd.DataFrame,
+            indicator: str | list,
+            vintage_year: str ='T-1',
+            vintage_month: str = 'Oct'
+    ):
+        return gen_forecast_error(self, vintage_data=vintage_data, indicator=indicator, vintage_year=vintage_year, vintage_month=vintage_month)
+
+    def gen_forecast_error_wide(
+            self,
+            vintage_data: pd.DataFrame,
+            indicator: str | list,
+            vintage_year: str ='T-1',
+            vintage_month: str = 'Oct'
+    ):
+        forecast_error_long = gen_forecast_error(self, vintage_data=vintage_data, indicator=indicator, vintage_year=vintage_year, vintage_month=vintage_month)
+        forecast_error_wide = forecast_error_long.pivot_table(index=['ifscode', 'year'], columns='indicator', values='forecast_error').reset_index()
+        return forecast_error_wide
 
 
 if __name__ == '__main__':
