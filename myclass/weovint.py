@@ -8,13 +8,21 @@ weovint_im_rename = {
 
 }
 
+def weovint_load(df):
+    df['ggr_d'] = df['ggr'] / df['enda']
+    df['ggei_d'] = df['ggei'] / df['enda']
+    df['ggei_ggr'] = df['ggei'] / df['ggr'] * 100
+    df['ggei_ggr_net'] = (df['ggei'] - df['ggropi']) / df['ggr'] * 100
+    return df
+
 @cpdBaseFrame(
     path=fr'{database_root}\ECOS\WEOvint',
     file_type='csv',
     prefix='WEOvint',
     dateid = '%Y%m',
     imr=weovint_im_rename,
-    default_version='latest'
+    default_version='latest',
+    load=weovint_load
 )
 class WeoVint(ImfFrame):
     pass

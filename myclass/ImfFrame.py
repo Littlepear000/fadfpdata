@@ -171,9 +171,11 @@ class ImfFrame(FramePro):
             weight: str = 'ngdpd',
             start_cell: str = 'A1',
             direction: str = 'right',
+            ps = None
     ):
         output = pd.DataFrame()
-        ps = cpd.PutxlSet(excel_file)
+        if ps is None:
+            ps = cpd.PutxlSet(excel_file)
         ps.tab(sheet_name)
 
         for group, list in group_dict.items():
