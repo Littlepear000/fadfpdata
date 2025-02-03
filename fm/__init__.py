@@ -5,15 +5,15 @@ from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.ecosdata import EcosData
 from fadfpdata.utils.core import cname_to_ifs, ifs_to_countryname, iso_to_ifs
 
-fm_version = '2024-10'
+fm_version = '2025-04'
 curr_year = int(fm_version[:4])
 curr_mon = int(fm_version[-2:])
-fm_folder = f'{fm_version}-October_Monitor' if curr_mon == 10 else f'{fm_version}-April_Monitor'
+fm_folder = f'{fm_version}-October Monitor' if curr_mon == 10 else f'{fm_version}-April Monitor'
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
-blmbg_update_date = '20241008'
-wbnrh_update_date = '20241024'
-weo_update_date = '20241017'
+blmbg_update_date = '20250128'
+wbnrh_update_date = '20250203'
+weo_update_date = '20250203'
 
 ecos = EcosData()
 dum = Dummy()

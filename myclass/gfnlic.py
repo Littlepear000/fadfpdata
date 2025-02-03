@@ -31,3 +31,20 @@ class GfnLic(ImfFrame):
 
 if __name__ == '__main__':
     d = GfnLic()
+
+    import os
+    import datetime
+    def _can_parse_date(dateid_expression, date_str):
+        try:
+            datetime.datetime.strptime(date_str, dateid_expression)
+            return True
+        except ValueError:
+            return False
+    files = os.listdir(fr'{database_root}\GFN\lic')
+    # print(files, self.class_prefix, self.file_type)
+    matching_files = [
+        f for f in files if
+        f.startswith('gfnlic' + '_') and
+        f.endswith('.xlsx') and
+        _can_parse_date('%Y%m%d', f.split('.')[0].split('_')[1])
+    ]
