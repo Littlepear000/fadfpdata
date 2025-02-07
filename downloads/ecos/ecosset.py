@@ -48,16 +48,24 @@ def _update_log(timestamp, logdict):
 class EcosSet:
     def __init__(
             self,
-            workbook: str = 'Data Pulling Template.xlsx'
+            workbook: str = 'Data Pulling Template.xlsx',
+            update: bool = False
     ):
-        destination_file = os.path.join(os.getcwd(), workbook)
-        if os.path.exists(destination_file):
-            print(f'Opening current {workbook} in the folder ... ')
+        if update:
+            today = datetime.datetime.today().strftime('%Y%m%d')
+            template_file = f'{ecos_root}/ecos/template/Data Pulling Template_FP vars.xlsx'
+            destination_file = os.path.join(f'{ecos_root}/ecos/template', f'template_{today}')
+            shutil.copyfile(template_file, destination_file)
+            self.path = destination_file
         else:
-            # noinspection PyUnboundLocalVariable
-            shutil.copyfile(c.template, destination_file)
-            print(f'{workbook} copied from template into the folder ... ')
-        self.path = os.path.join(os.getcwd(), workbook)
+            destination_file = os.path.join(os.getcwd(), workbook)
+            if os.path.exists(destination_file):
+                print(f'Opening current {workbook} in the folder ... ')
+            else:
+                # noinspection PyUnboundLocalVariable
+                shutil.copyfile(c.template, destination_file)
+                print(f'{workbook} copied from template into the folder ... ')
+            self.path = os.path.join(os.getcwd(), workbook)
 
         wb = xw.Book(self.path)
         ws = wb.sheets['Dashboard']
@@ -123,5 +131,5 @@ class EcosSet:
             return data
 
 if __name__ == '__main__':
-    a = EcosSet(f'{folder_ecos}/templates/template_20250203.xlsx')
+    a = EcosSet()
     a.pull(export=True)
