@@ -54,7 +54,7 @@ class EcosSet:
         if update:
             today = datetime.datetime.today().strftime('%Y%m%d')
             template_file = f'{ecos_root}/ecos/template/Data Pulling Template_FP vars.xlsx'
-            destination_file = os.path.join(f'{ecos_root}/ecos/template', f'template_{today}')
+            destination_file = os.path.join(f'{ecos_root}/ecos/templates', f'template_{today}')
             shutil.copyfile(template_file, destination_file)
             self.path = destination_file
         else:
