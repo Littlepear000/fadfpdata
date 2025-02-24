@@ -17,6 +17,10 @@ class Dummy(FramePro):
         return self.inlist('g20_adv', 1)['ifscode'].tolist() + self.inlist('g20_em', 1)['ifscode'].tolist()
 
     @property
+    def eur(self):
+        return self.inlist('adv_eur', 1)['ifscode'].tolist() + self.inlist('em_eur', 1)['ifscode'].tolist()
+
+    @property
     def ae_noUS(self):
         return [c for c in self.inlist('ae', 1)['ifscode'].tolist() if c != 111]
 

@@ -1,9 +1,10 @@
 import time
 import win32com.client as win32
 from datetime import datetime
+from fadfpdata.fm import weo_update_date
 
 table1_22_excel = r"Q:\DATA\FP\Fiscal Monitor\2025-04-April Monitor\MSA\Stat_Tables1-22_FMApr2025.xlsm"
-table23_25_excel = r"Q:\DATA\FP\Fiscal Monitor\2025-04-April Monitor\MSA\StatTab23-24-25_FMApr2025_20250203.xlsx"
+table23_25_excel = fr"Q:\DATA\FP\Fiscal Monitor\2025-04-April Monitor\MSA\StatTab23-24-25_FMApr2025_{weo_update_date}.xlsx"
 
 wdPageBreak = 7
 wdAlignParagraphLeft = 0

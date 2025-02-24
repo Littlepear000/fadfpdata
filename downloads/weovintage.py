@@ -14,6 +14,7 @@ vintagelist = []
 for year in year_range:
     for month in months:
         vintagelist.append(f'WEO_WEO{month}{year}Pub')
+vintagelist.append('WEO_WEOJan2025Pub')
 
 varlist = [
     "ENDA",
@@ -40,7 +41,7 @@ varlist = [
     "NGDPD",
     "NGDP_FY",
     "NGDP_FY_USD",
-    "LP"
+    "LP",
 ]
 
 # This process takes about 10-15min

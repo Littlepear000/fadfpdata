@@ -11,19 +11,20 @@ curr_mon = int(fm_version[-2:])
 fm_folder = f'{fm_version}-October Monitor' if curr_mon == 10 else f'{fm_version}-April Monitor'
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
-blmbg_update_date = '20250128'
-wbnrh_update_date = '20250203'
-weo_update_date = '20250203'
+blmbg_update_date = '20250218'
+wbnrh_update_date = '20250224'
+weo_update_date = '20250224'
+ep_start_year = 2024
 
 ecos = EcosData()
 dum = Dummy()
 
 col_ren = {
     'country': '',
-    'Y_2023_to_2030_pension': 'Pension Spending Change, 2023–30',
-    'NPV2023_2050_pension': 'Net Present Value of Pension Spending Change, 2023–50',
-    'Y_2023_to_2030_health': 'Health Care Spending Change, 2023–30',
-    'NPV2023_2050_health': 'Net Present Value of Health Care Spending Change, 2023–50',
+    f'Y_{ep_start_year}_to_2030_pension': f'Pension Spending Change, {ep_start_year}–30',
+    f'NPV{ep_start_year}_2050_pension': f'Net Present Value of Pension Spending Change, {ep_start_year}–50',
+    f'Y_{ep_start_year}_to_2030_health': f'Health Caref Spending Change, {ep_start_year}–30',
+    f'NPV{ep_start_year}_2050_health': f'Net Present Value of Health Care Spending Change, {ep_start_year}–50',
     'gfn': 'Gross Financing Need, 2024',
     'years_to_maturity': 'Average Term to Maturity, 2024 (years)',
     'debt_to_maturity': 'Debt to Average Maturity, 2024',
