@@ -40,10 +40,3 @@ gfn['gfn'] = gfn['deficit'] + gfn['maturing_debt']
 hide_list = ['Andorra', 'Hong Kong', 'Israel', 'Luxembourg', 'Norway']
 for country in hide_list:
     gfn.loc[gfn['ifscode'] == cname_to_ifs[country], 'gfn'] = np.nan
-
-# gfn.loc[gfn['ifscode'] == 171, 'gfn'] = np.nan  # change Andorra to missing
-# gfn.loc[gfn['ifscode'] == 532, 'gfn'] = np.nan  # change Hong Kong to missing
-# gfn.loc[gfn['ifscode'] == 436, 'gfn'] = np.nan  # change Israel to missing
-# gfn.loc[gfn['ifscode'] == 137, 'gfn'] = np.nan  # change Luxembourg to missing
-# gfn.loc[gfn['ifscode'] == 142, 'gfn'] = np.nan  # change Norway to missing
-

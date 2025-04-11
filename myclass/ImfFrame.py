@@ -4,7 +4,7 @@ import re
 from pandaspro import CellPro
 from pandaspro.core.frame import FramePro
 from fadfpdata.myclass.dummy import Dummy
-from fadfpdata.utils.core import weighted_avg, ifs_to_countryname, inc_dict
+from fadfpdata.utils.core import weighted_avg, ifs_to_cname, inc_dict
 
 
 def filter_year(df, years: str, ftype: str):
@@ -100,7 +100,7 @@ class ImfFrame(FramePro):
     @property
     def add_cname(self):
         newdf = self.copy()
-        newdf['country'] = newdf['ifscode'].map(ifs_to_countryname)
+        newdf['country'] = newdf['ifscode'].map(ifs_to_cname)
         return newdf.corder('country')
 
     def get_latest_available_data(self, varname: str):

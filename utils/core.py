@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+import numpy as np
 import pandas as pd
 from fadfpdata import onedrive_root
 from fadfpdata.myclass.dummy import Dummy
@@ -22,18 +23,18 @@ inc_dict = {
 countrycode_file = fr'{onedrive_root}\0_tools\Country Code & Template\Country Code & Grouping\Country Codes.xlsx'
 country_name2code = pd.read_excel(countrycode_file, sheet_name='name_to_code')
 country_name2code.loc[country_name2code['ifscode'] == 728, 'iso2'] = 'NA'
-cname_to_ifs = {row['country']: int(row['ifscode']) for index, row in country_name2code.iterrows()}
-countryname_to_iso = {row['country']: row['iso3'] for index, row in country_name2code.iterrows()}
-countryname_to_iso2 = {row['country']: row['iso2'] for index, row in country_name2code.iterrows()}
+cname_to_ifs = {row['country']: int(row['ifscode']) for index, row in country_name2code.iterrows() if not pd.isna(row['ifscode'])}
+cname_to_iso = {row['country']: row['iso3'] for index, row in country_name2code.iterrows()}
+cname_to_iso2 = {row['country']: row['iso2'] for index, row in country_name2code.iterrows()}
 
 country_code2name = pd.read_excel(countrycode_file, sheet_name='code_to_name')
 country_code2name.loc[country_code2name['ifscode'] == 728, 'iso2'] = 'NA'
 ifs_to_iso = {int(row['ifscode']): row['iso3'] for index, row in country_code2name.iterrows()}
 iso_to_ifs = {row['iso3']: int(row['ifscode']) for index, row in country_code2name.iterrows() if row['iso3'] is not None}
 iso2_to_ifs = {row['iso2']: int(row['ifscode']) for index, row in country_code2name.iterrows() if row['iso2'] is not None}
-ifs_to_countryname = {int(row['ifscode']): row['country'] for index, row in country_code2name.iterrows()}
-iso_to_countryname = {row['iso3']: row['country'] for index, row in country_code2name.iterrows()}
-iso2_to_countryname = {row['iso2']: row['country'] for index, row in country_code2name.iterrows()}
+ifs_to_cname = {int(row['ifscode']): row['country'] for index, row in country_code2name.iterrows()}
+iso_to_cname = {row['iso3']: row['country'] for index, row in country_code2name.iterrows()}
+iso2_to_cname = {row['iso2']: row['country'] for index, row in country_code2name.iterrows()}
 
 def get_latest_file(folder_path, debug=False):
     files = os.listdir(folder_path)
@@ -51,8 +52,12 @@ def get_latest_file(folder_path, debug=False):
 
 def weighted_avg(df, indicator, weight='ngdpd'):
     df = df.dropna(subset=[indicator, weight])
-    df_weighted = (df[indicator] * df[weight]).sum() / df[weight].sum()
+    weight_sum = df[weight].sum()
+    if weight_sum == 0:
+        return np.nan
+    df_weighted = (df[indicator] * df[weight]).sum() / weight_sum
     return df_weighted
+
 
 if __name__ == '__main__':
     # Sample data to test the weighted_avg function

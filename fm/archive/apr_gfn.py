@@ -30,7 +30,7 @@ gfn_emde['gfn'] = gfn_emde['deficit'] + gfn_emde['maturing_debt']
 gfn_emde = gfn_emde[['ifscode', 'deficit', 'maturing_debt', 'gfn']]
 
 gfn = pd.concat([gfn_ae, gfn_emde]).sort_values('ifscode')
-gfn['country'] = gfn['ifscode'].map(ifs_to_countryname)
+gfn['country'] = gfn['ifscode'].map(ifs_to_cname)
 gfn.to_excel('temp.xlsx')
 
 # Gross financing needs: EMDE - alternative source: EDI

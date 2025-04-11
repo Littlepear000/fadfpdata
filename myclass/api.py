@@ -1,10 +1,9 @@
-from fadfpdata.myclass.ecosdata import EcosData as ecos
-from fadfpdata.myclass.weovintages import WeoVinages as weovint
-from fadfpdata.myclass.dummy import Dummy as dum
+from fadfpdata.myclass.ecosdata import EcosData
+from fadfpdata.myclass.weovintages import WeoVinages
+from fadfpdata.myclass.dummy import Dummy
+from fadfpdata.myclass.ImfFrame import ImfFrame
+
 
 
 __all__ = [
-    'ecos',
-    'weovint',
-    'dum'
 ]
