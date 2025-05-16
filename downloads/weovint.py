@@ -1,7 +1,7 @@
 import pandas as pd
 from fadfpdata.downloads import ecos_root
 
-df = pd.read_csv(fr'{ecos_root}\WEOvintages\WEOvintages_20250224.csv')
+df = pd.read_csv(fr'{ecos_root}\WEOvintages\WEOvintages_20250515.csv')
 month_dict = {
     'Jan': '01',
     'Apr': '04',

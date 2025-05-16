@@ -10,7 +10,8 @@ from fadfpdata.myclass.api import (
     EcosData,
     WeoVinages,
     Dummy,
-    ImfFrame
+    ImfFrame,
+    WeoVint
 )
 
 __all__ = [
@@ -25,5 +26,6 @@ __all__ = [
     'EcosData',
     'WeoVinages',
     'Dummy',
-    'ImfFrame'
+    'ImfFrame',
+    'WeoVint'
 ]
