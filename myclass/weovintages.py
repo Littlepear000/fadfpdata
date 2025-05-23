@@ -1,6 +1,6 @@
 import pandas as pd
 from fadfpdata.myclass.ImfFrame import ImfFrame
-from fadfpdata.downloads.weovintage import folder_vintage
+from fadfpdata.downloads.weovintages import folder_vintage
 from fadfpdata.utils.core import get_latest_file
 
 
