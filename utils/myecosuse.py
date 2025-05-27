@@ -73,9 +73,12 @@ def myecosuse(
 
     print(errmsg)
     df.rename(columns={'COUNTRY': 'ifscode'}, inplace=True)
+    df['ifscode'] = pd.to_numeric(df['ifscode'], errors='coerce')
+    df = df[~df['ifscode'].isna()]
     df['ifscode'] = df['ifscode'].astype(int)
     df['year'] = df['dates'].dt.year
     # df.drop(columns='dates', inplace=True)
+    df = df.sort_values(['ifscode', 'year'])
     new_order = ['ifscode', 'year', 'dates'] + [col for col in df.columns if col not in ['ifscode', 'year', 'dates']]  # reorder the columns
     return df[new_order]
 

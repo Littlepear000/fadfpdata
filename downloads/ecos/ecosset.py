@@ -84,8 +84,8 @@ class EcosSet:
 
             if countryselect == 'All countries w/o aggregates':
                 clist = Dummy().noagg
-            elif countryselect == 'All countries w aggregates (WLD, WAEMU, EURO, and ECCU)':
-                clist = Dummy().all
+            elif countryselect == 'All countries w aggregates':
+                clist = 'all'
             else:
                 clist_colindex = colindex - 1
                 clist_col = get_column_letter(clist_colindex)

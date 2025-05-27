@@ -103,6 +103,10 @@ class ImfFrame(FramePro):
         newdf['country'] = newdf['ifscode'].map(ifs_to_cname)
         return newdf.corder('country')
 
+    @property
+    def noagg(self):
+        return self.inlist('ifscode', Dummy().noagg)
+
     def get_latest_available_data(self, varname: str):
         filtered_df = self.dropna(subset=[varname])
         latest_df = filtered_df.sort_values('year').groupby('ifscode').tail(1)
@@ -131,7 +135,7 @@ class ImfFrame(FramePro):
             df = df.sort_values('group').reset_index(drop=True)
         return df
 
-    def agg_mean(self, indicator, group_dict=inc_dict, weight='ngdpd'):
+    def agg_mean(self, indicator, group_dict=inc_dict, weight='ngdp_fy_usd'):
         df_append = pd.DataFrame()
         if weight:
             for group, gr_list in group_dict.items():
@@ -165,18 +169,22 @@ class ImfFrame(FramePro):
     def export_agg_detail(
             self,
             indicator: str,
-            excel_file: str,
-            sheet_name: str,
             group_dict: dict = inc_dict,
-            weight: str = 'ngdpd',
+            weight: str = 'ngdp_fy_usd',
+            export: bool = True,
+            excel_file: str = None,
+            sheet_name: str = None,
             start_cell: str = 'A1',
             direction: str = 'right',
             ps = None
     ):
         output = pd.DataFrame()
-        if ps is None:
-            ps = cpd.PutxlSet(excel_file)
-        ps.tab(sheet_name)
+        result_dict = {}
+
+        if export:
+            if ps is None:
+                ps = cpd.PutxlSet(excel_file)
+            ps.tab(sheet_name)
 
         for group, list in group_dict.items():
 
@@ -197,13 +205,18 @@ class ImfFrame(FramePro):
             result_copy['group'] = group
             result_copy = result_copy.corder('group')
             output = pd.concat([output, result_copy])
+            result_dict[group] = result
 
-            ps.putxl(group, cell=CellPro(start_cell).offset(-1, 0).cell)
-            ps.putxl(result, cell=start_cell, index=False)
-            if direction == 'right':
-                start_cell = CellPro(ps.next_cell_right.cell).offset(0, 2).cell
-            elif direction == 'down':
-                start_cell = CellPro(ps.next_cell_down.cell).offset(3, 0).cell
+            if export:
+                ps.putxl(group, cell=CellPro(start_cell).offset(-1, 0).cell)
+                ps.putxl(result, cell=start_cell, index=False)
+                if direction == 'right':
+                    start_cell = CellPro(ps.next_cell_right.cell).offset(0, 2).cell
+                elif direction == 'down':
+                    start_cell = CellPro(ps.next_cell_down.cell).offset(3, 0).cell
+
+        if export is False:
+            return result_dict
 
     def gen_forecast_error_long(
             self,

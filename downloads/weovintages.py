@@ -1,5 +1,4 @@
 import pandas as pd
-import imf_datatools
 import datetime
 import time
 import os
@@ -59,7 +58,6 @@ varlist = [
     "NFI",
     "GGAAN_T",
     "NGAP_R",
-    "PPPSH",
 ]
 
 def pull_vintage():
@@ -80,7 +78,11 @@ def pull_vintage():
         existing_vars = [v.lower() for v in varlist if v.lower() in temp.columns]
         temp = temp[['vintage_year', 'country', 'ifscode', 'year'] + existing_vars]
         df = pd.concat([df, temp], ignore_index=True)
-    df = ImfFrame(df[df['ifscode'].isin(wo_aggregate)])
+
+    df['ifscode'] = pd.to_numeric(df['ifscode'], errors='coerce')
+    df = df[~df['ifscode'].isna()]
+    df['ifscode'] = df['ifscode'].astype(int)
+    df = ImfFrame(df)
 
     timestamp = datetime.datetime.now().strftime('%Y%m%d')
     df.to_csv(f'{folder_vintage}/WEOvintages_{timestamp}.csv', index=False)
