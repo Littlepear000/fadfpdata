@@ -9,7 +9,7 @@ from fadfpdata.downloads import ecos_root
 wo_aggregate = Dummy().noagg
 
 folder_vintage = f'{ecos_root}/WEOvintages'
-year_range = range(2010, 2025)
+year_range = range(2000, 2025)
 months = ['Jan', 'Apr', 'Jul', 'Oct']
 vintagelist = []
 for year in year_range:
@@ -49,6 +49,7 @@ varlist = [
     "NGDP_D",
     "PCPI",
     "NGDP_DPCH",
+    "NGDP_RPCH",
     "PCPI_PCH",
     "GGECE",
     "GGEEC",
@@ -85,7 +86,10 @@ def pull_vintage():
     df = ImfFrame(df)
 
     timestamp = datetime.datetime.now().strftime('%Y%m%d')
-    df.to_csv(f'{folder_vintage}/WEOvintages_{timestamp}.csv', index=False)
+    for m in months:
+        print(f'Exporting WEO {m} vintages...')
+        df_m = df[df['vintage_year'].str.contains(m, na=False)]
+        df_m.to_csv(f'{folder_vintage}/{m}/WEOvintages_{m}_{timestamp}.csv', index=False)
     endtime = time.time()
     print(f'Download complete. Time Duration: {round((endtime-starttime)/60, 1)}min')
 

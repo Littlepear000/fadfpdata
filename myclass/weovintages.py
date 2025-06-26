@@ -7,14 +7,15 @@ from fadfpdata.utils.core import get_latest_file
 class WeoVinages(ImfFrame):
     def __init__(self,
                  *args,
+                 month='Apr',
                  version='latest',
                  **kwargs
                  ):
         if args or kwargs:
             super().__init__(*args, **kwargs)
         else:
-            local_version = get_latest_file(folder_vintage) if version == 'latest' else version
-            raw = pd.read_csv(f'{folder_vintage}/WEOvintages_{local_version}.csv')
+            local_version = get_latest_file(f'{folder_vintage}/{month}') if version == 'latest' else version
+            raw = pd.read_csv(f'{folder_vintage}/{month}/WEOvintages_{month}_{local_version}.csv')
             super().__init__(raw)
 
     @property
