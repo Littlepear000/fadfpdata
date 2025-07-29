@@ -1,10 +1,11 @@
 import time
 import win32com.client as win32
 from datetime import datetime
-from fadfpdata.fm import weo_update_date
+from fadfpdata.fm import curr_mon,weo_update_date, output_folder
 
-table1_22_excel = r"Q:\DATA\FP\Fiscal Monitor\2025-04-April Monitor\MSA\Stat_Tables1-22_FMApr2025.xlsm"
-table23_25_excel = fr"Q:\DATA\FP\Fiscal Monitor\2025-04-April Monitor\MSA\StatTab23-24-25_FMApr2025_{weo_update_date}.xlsx"
+mon = 'Apr' if curr_mon == 4 else 'Oct'
+table1_22_excel = fr"{output_folder}\Stat_Tables1-22_FM{mon}2025.xlsm"
+table23_25_excel = fr"{output_folder}\StatTab23-24-25_FM{mon}2025_{weo_update_date}.xlsx"
 
 wdPageBreak = 7
 wdAlignParagraphLeft = 0
