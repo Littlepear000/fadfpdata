@@ -87,5 +87,5 @@ for i in range(1, ws_count + 1):
 
 selection.GoTo(What=wdGoToPage, Which=wdGoToFirst)
 timestamp = datetime.now().strftime("%Y%m%d %H-%M-%S")
-filepath = f"Q:\\DATA\\FP\\Fiscal Monitor\\2025-04-April Monitor\\MSA\\Table1-25_{timestamp}.docx"
+filepath = fr"{output_folder}\Table1-25_{timestamp}.docx"
 wordApp.ActiveDocument.SaveAs2(filepath)

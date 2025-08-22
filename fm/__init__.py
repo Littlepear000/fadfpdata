@@ -14,7 +14,8 @@ input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
 blmbg_update_date = '20250724'
 wbnrh_update_date = '20250725'
-weo_update_date = '20250725'
+weo_update_date = '20250819'
+ep_update_date = '20250820'
 ep_start_year = 2024
 
 ecos = EcosData()
