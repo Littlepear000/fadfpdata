@@ -20,14 +20,15 @@ inc_dict = {
     'China': [924]
 }
 
-countrycode_file = fr'{onedrive_root}\0_tools\Country Code & Template\Country Code & Grouping\Country Codes.xlsx'
-country_name2code = pd.read_excel(countrycode_file, sheet_name='name_to_code')
+weo_countrycode_file = fr'{onedrive_root}\0_tools\Country Code & Template\Country Code & Grouping\Country Codes.xlsx'
+country_name2code = pd.read_excel(weo_countrycode_file, sheet_name='name_to_code')
 country_name2code.loc[country_name2code['ifscode'] == 728, 'iso2'] = 'NA'
+fm_countrycode_file = None
 cname_to_ifs = {row['country']: int(row['ifscode']) for index, row in country_name2code.iterrows() if not pd.isna(row['ifscode'])}
 cname_to_iso = {row['country']: row['iso3'] for index, row in country_name2code.iterrows()}
 cname_to_iso2 = {row['country']: row['iso2'] for index, row in country_name2code.iterrows()}
 
-country_code2name = pd.read_excel(countrycode_file, sheet_name='code_to_name')
+country_code2name = pd.read_excel(weo_countrycode_file, sheet_name='code_to_name')
 country_code2name.loc[country_code2name['ifscode'] == 728, 'iso2'] = 'NA'
 ifs_to_iso = {int(row['ifscode']): row['iso3'] for index, row in country_code2name.iterrows()}
 iso_to_ifs = {row['iso3']: int(row['ifscode']) for index, row in country_code2name.iterrows() if row['iso3'] is not None}
