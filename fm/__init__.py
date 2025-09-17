@@ -12,9 +12,9 @@ curr_mon = int(fm_version[-2:])
 fm_folder = f'{fm_version}-{fm_folder_name}'
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
-blmbg_update_date = '20250724'
-wbnrh_update_date = '20250725'
-weo_update_date = '20250819'
+blmbg_update_date = '20250916'
+wbnrh_update_date = '20250916'
+weo_update_date = '20250916'
 ep_update_date = '20250820'
 ep_start_year = 2024
 
