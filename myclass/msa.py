@@ -21,11 +21,11 @@ class msa:
         # 原本放在 __init__.py 的参数
         fm_version,
         fm_folder_name,
-        weo_update_date,
         blmbg_update_date,
         wbnrh_update_date,
+        weo_update_date,
         ep_update_date,
-        ep_start_year: int =2024
+        ep_start_year
     ):
         # 基本参数
         self.curr_year = curr_year
@@ -40,6 +40,23 @@ class msa:
         self.weo_update_date = weo_update_date
         self.ep_update_date = ep_update_date
         self.ep_start_year = ep_start_year
+
+        # 动态生成 col_ren
+        self.col_ren = {
+            'country': '',
+            f'Y_{self.ep_start_year}_to_2030_pension': f'Pension Spending Change, {self.ep_start_year}–30',
+            f'NPV{self.ep_start_year}_2050_pension': f'Net Present Value of Pension Spending Change, {self.ep_start_year}–50',
+            f'Y_{self.ep_start_year}_to_2030_health': f'Health Care Spending Change, {self.ep_start_year}–30',
+            f'NPV{self.ep_start_year}_2050_health': f'Net Present Value of Health Care Spending Change, {self.ep_start_year}–50',
+            'gfn': 'Gross Financing Need, 2024',
+            'years_to_maturity': 'Average Term to Maturity, 2024 (years)',
+            'debt_to_maturity': 'Debt to Average Maturity, 2024',
+            'rlessg': 'Projected Interest Rate–Growth Differential, 2024–29 (percent)',
+            'pre_pan_cnl': 'Pre-Pandemic Overall Balance, 2012–19',
+            'ggxcnl_gdp': 'Projected Overall Balance, 2024–29',
+            'nrh': 'Nonresident Holding of General Government Debt, 2023 (percent of total)',
+            'nfw': 'Net Financial Worth of General Government, 2021 (percent of GDP)'
+        }
 
         # 各类分组与数值
         self.group_dict = {
@@ -89,9 +106,24 @@ class msa:
         return agg_all.reset_index().rename(columns={'index': 'country'})
 
     def finalize_table(self, agg_all, table):
-        final_table = pd.concat([agg_all, table.drop('ifscode', axis=1)])
+        final_table = pd.concat([agg_all, table.drop('ifscode', axis=1)])[self.col_ren.keys()]
         final_table = final_table.reset_index().drop('index', axis=1).fillna('...')
-        final_table.loc[final_table['country'].isin(self.group_dict.k]
+        final_table.loc[final_table['country'].isin(self.group_dict.keys()), 'nfw'] = ''
+        final_table.loc[final_table['country'].isin(self.pre_pan_cnl_dict.keys()), 'pre_pan_cnl'] = \
+            final_table['country'].map(self.pre_pan_cnl_dict)
+        return final_table
 
-if __name__ == '__main__':
-    pass
+    def export_to_excel(self, final_table):
+        output_file = fr'{self.output_folder}\Stat_Tables23-25_FM{self.fm_folder_name}_{self.weo_update_date}.xlsx'
+        ps = cpd.PutxlSet(output_file)
+        for sheet, cellrange in self.stat23_25_dict.items():
+            country_order = cpd.pwread(output_file, sheet_name=sheet, cellrange=cellrange)[0].rename(
+                columns={'unnamed_1': 'country'})
+            table_final = country_order.merge(final_table, on='country', how='left')
+            ps.putxl(table_final.drop('country', axis=1), sheet_name=sheet, cell='C4', header=False, index=False)
+
+    def run(self):
+        table = self.prepare_table()
+        agg_all = self.aggregate_groups(table)
+        final_table = self.finalize_table(agg_all, table)
+        self.export_to_excel(final_table)

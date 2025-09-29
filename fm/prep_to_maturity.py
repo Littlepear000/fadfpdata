@@ -11,8 +11,12 @@ hide_list = ['Hong Kong', 'Lebanon', 'Sri Lanka']
 for country in hide_list:
     maturity.loc[maturity['ifscode'] == cname_to_ifs[country], 'years_to_maturity'] = np.nan
 
-# maturity.loc[maturity['ifscode'] == 532, 'years_to_maturity'] = np.nan  # change Hong Kong to missing
-# maturity.loc[maturity['ifscode'] == 446, 'years_to_maturity'] = np.nan  # change Lebanon to missing
+# additional/revised data from country desk/authorities
+desk = cpd.pwread(fr'{input_folder}/Additional country desk data on maturity.xlsx')[0]
+desk['ifscode'] = desk['country'].map(cname_to_ifs)
+maturity_map = desk.cpdmap_ifscode__maturity
+for ifs, m in maturity_map.items():
+    maturity.loc[maturity['ifscode'] == ifs, 'years_to_maturity'] = m
 
 # Debt to average maturity - source: Bloomberg + WEO
 weo_debt = ecos[['ifscode', 'year', 'ggxwdg_gdp']].inlist('year', curr_year)
