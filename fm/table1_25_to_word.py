@@ -45,6 +45,7 @@ def export_table2word(
     time.sleep(1)
     selection.Paste()
 
+win32.gencache.Rebuild()
 wordApp = win32.Dispatch("Word.Application")
 wordApp.Visible = True
 wordApp.Activate()

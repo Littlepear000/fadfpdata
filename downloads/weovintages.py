@@ -9,14 +9,12 @@ from fadfpdata.downloads import ecos_root
 wo_aggregate = Dummy().noagg
 
 folder_vintage = f'{ecos_root}/WEOvintages'
-year_range = range(2000, 2025)
+year_range = range(2000, 2026)
 months = ['Jan', 'Apr', 'Jul', 'Oct']
 vintagelist = []
 for year in year_range:
     for month in months:
         vintagelist.append(f'WEO{month}{year}Pub')
-vintagelist.append('WEOJan2025Pub')
-vintagelist.append('WEOApr2025Pub')
 
 
 varlist = [
@@ -58,7 +56,7 @@ varlist = [
     "GGESS",
     "NFI",
     "GGAAN_T",
-    "NGAP_R",
+    "NGAP_R"
 ]
 
 def pull_vintage():

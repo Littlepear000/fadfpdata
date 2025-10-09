@@ -65,11 +65,12 @@ def gen_forecast_error(
                                        var_name='indicator',
                                        value_name='forecast')
 
-    combine = weovint_long.merge(ecos_long,
+    combine = ecos_long.merge(weovint_long,
                                  on=['ifscode', 'indicator', 'vintage_year', 'year'],
                                  how='left')
-    combine['forecast_error'] = combine['forecast'] - combine['actual']
+    combine['forecast_error'] = combine['actual'] - combine['forecast']
     final = combine[combine['vintage_year'] == combine['year'] + adj]
+    final = final.corder(['indicator', 'ifscode', 'year', 'actual', 'vintage_year', 'forecast', 'forecast_error'])
     return final
 
 class ImfFrame(FramePro):
@@ -225,7 +226,9 @@ class ImfFrame(FramePro):
             vintage_year: str ='T-1',
             vintage_month: str = 'Oct'
     ):
-        return gen_forecast_error(self, vintage_data=vintage_data, indicator=indicator, vintage_year=vintage_year, vintage_month=vintage_month)
+        combine = gen_forecast_error(self, vintage_data=vintage_data, indicator=indicator, vintage_year=vintage_year, vintage_month=vintage_month)
+        final = gen_forecast_error(self, vintage_data=vintage_data, indicator=indicator, vintage_year=vintage_year, vintage_month=vintage_month)
+        return final
 
     def gen_forecast_error_wide(
             self,
@@ -234,7 +237,7 @@ class ImfFrame(FramePro):
             vintage_year: str ='T-1',
             vintage_month: str = 'Oct'
     ):
-        forecast_error_long = gen_forecast_error(self, vintage_data=vintage_data, indicator=indicator, vintage_year=vintage_year, vintage_month=vintage_month)
+        forecast_error_long = gen_forecast_error(self, vintage_data=vintage_data, indicator=indicator, vintage_year=vintage_year, vintage_month=vintage_month)[1]
         forecast_error_wide = forecast_error_long.pivot_table(index=['ifscode', 'year'], columns='indicator', values='forecast_error').reset_index()
         return forecast_error_wide
 

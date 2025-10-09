@@ -1,14 +1,17 @@
 from openpyxl import load_workbook
 from openpyxl.styles import Font
+from fadfpdata.fm import output_folder
 
-msa_qdrive = r'Q:\DATA\FP\Fiscal Monitor\2024-10-October_Monitor\MSA'
-old_date = '20241010'
-new_date = '20241017'
+msa_qdrive = output_folder
+prefix = 'FMOct2025'
+old_date = '20250916'
+new_date = '20251007'
 
-wb1 = load_workbook(fr'{msa_qdrive}\MSA_{old_date}.xlsx')
-wb2 = load_workbook(fr'{msa_qdrive}\Copy of MSA_{new_date}.xlsx')
+wb1 = load_workbook(fr'{msa_qdrive}\Stat_Tables1-25_{prefix}_{old_date}_copy.xlsx')
+wb2 = load_workbook(fr'{msa_qdrive}\Stat_Tables1-25_{prefix}_{new_date}_copy.xlsx')
 
 for sheet_name in wb1.sheetnames:
+    print(sheet_name)
     sheet1 = wb1[sheet_name]
     sheet2 = wb2[sheet_name]
 
@@ -27,7 +30,7 @@ for sheet_name in wb1.sheetnames:
                 cell2.font = Font(name='Arial', size=9, color="FF0000")
             else:
                 cell2.font = Font(color="000000")
-output_path = fr'{msa_qdrive}\FM_October_2024_Methodological and Statistical Appendix_{new_date}.xlsx'
+output_path = fr'{msa_qdrive}\MSA_update_w_red_highlight_{new_date}_copy.xlsx'
 wb2.save(output_path)
 wb1.close()
 wb2.close()
