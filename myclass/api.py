@@ -3,7 +3,7 @@ from fadfpdata.myclass.weovintages import WeoVinages
 from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.ImfFrame import ImfFrame
 from fadfpdata.myclass.weovint import WeoVint
-
+from fadfpdata.myclass.idata import iData
 
 
 __all__ = [
