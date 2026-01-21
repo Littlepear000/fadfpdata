@@ -4,8 +4,8 @@ from datetime import datetime
 from fadfpdata.fm import curr_mon,weo_update_date, output_folder
 
 mon = 'Apr' if curr_mon == 4 else 'Oct'
-table1_22_excel = fr"{output_folder}\Stat_Tables1-22_FM{mon}2025.xlsm"
-table23_25_excel = fr"{output_folder}\Stat_Tables23-25_FM{mon}2025_{weo_update_date}.xlsx"
+table1_22_excel = fr"{output_folder}\Stat_Tables1-22_FM{mon}2026.xlsm"
+table23_25_excel = fr"{output_folder}\Stat_Tables23-25_FM{mon}2026_{weo_update_date}.xlsx"
 
 wdPageBreak = 7
 wdAlignParagraphLeft = 0

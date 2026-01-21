@@ -19,6 +19,6 @@ for ifs, m in maturity_map.items():
     maturity.loc[maturity['ifscode'] == ifs, 'years_to_maturity'] = m
 
 # Debt to average maturity - source: Bloomberg + WEO
-weo_debt = ecos[['ifscode', 'year', 'ggxwdg_gdp']].inlist('year', curr_year)
+weo_debt = weodata[['ifscode', 'year', 'ggxwdg_gdp']].inlist('year', curr_year)
 d_to_m = maturity.merge(weo_debt, on='ifscode', how='left').drop('year', axis=1)
 d_to_m['debt_to_maturity'] = d_to_m['ggxwdg_gdp'] / d_to_m['years_to_maturity']

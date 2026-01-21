@@ -1,6 +1,6 @@
 from fadfpdata.fm import *
 
-data = ecos[['ifscode', 'year', 'ggei', 'ggxwdg', 'ngdp', 'ggxcnl_gdp']].query('year >= 2000')
+data = weodata[['ifscode', 'year', 'ggei', 'ggxwdg', 'ngdp', 'ggxcnl_gdp']].query('year >= 2000')
 data['g'] = data.groupby('ifscode')['ngdp'].pct_change()
 data['ggxwdg_l'] = data.groupby('ifscode')['ggxwdg'].shift(1)
 data['r'] = np.where(data['ggxwdg_l'] == 0, np.nan, data['ggei'] / data['ggxwdg_l'])

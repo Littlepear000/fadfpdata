@@ -11,16 +11,16 @@ ddis = ddis.melt(id_vars=['country', 'ifscode'],
                  var_name='year',
                  value_name='ddis')
 ddis['year'] = ddis['year'].astype('int')
-ddis = ddis.merge(ecos[['ifscode', 'year', 'ngdp_fy']], on=['ifscode', 'year'], how='left')
+ddis = ddis.merge(weodata[['ifscode', 'year', 'ngdp_fy']], on=['ifscode', 'year'], how='left')
 ddis['maturing_debt'] = ddis['ddis'] / ddis['ngdp_fy'] * 100
 ddis_ae = ddis.inlist('year', curr_year)
 
-deficit_ae = ecos.inlist('ifscode', dum.ae).inlist('year', curr_year)
+deficit_ae = weodata.inlist('ifscode', dum.ae).inlist('year', curr_year)
 deficit_ae['deficit'] = - deficit_ae['ggxcnl'] / deficit_ae['ngdp_fy'] * 100
 gfn_ae = deficit_ae.merge(ddis_ae, on=['ifscode', 'year'], how='left')[['ifscode', 'deficit', 'maturing_debt']]
 
 # Gross financing needs: EMDE - source: WEO
-gfn_emde = ecos.inlist('ifscode', dum.emde).inlist('year', curr_year)
+gfn_emde = weodata.inlist('ifscode', dum.emde).inlist('year', curr_year)
 gfn_emde['deficit'] = - gfn_emde['ggxcnl'] / gfn_emde['ngdp_fy'] * 100
 gfn_emde['maturing_debt'] = (gfn_emde['ggds'] - gfn_emde['ggei']) / gfn_emde['ngdp_fy'] * 100
 gfn_emde = gfn_emde[['ifscode', 'deficit', 'maturing_debt']]
