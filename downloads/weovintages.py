@@ -15,7 +15,7 @@ vintagelist = []
 for year in year_range:
     for month in months:
         vintagelist.append(f'WEO{month}{year}Pub')
-
+vintagelist = vintagelist + ['WEOJan2026Pub']
 
 varlist = [
     "ENDA",

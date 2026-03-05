@@ -86,7 +86,7 @@ class iDataSet:
             if countryselect == 'All countries w/o aggregates':
                 clist = '+'.join(str(ifs_to_iso[ifs]) for ifs in Dummy().noagg)
             elif countryselect == 'All countries w aggregates':
-                clist = '+'.join(str(ifs_to_iso[ifs]) for ifs in Dummy().noagg)
+                clist = ''
             else:
                 clist_colindex = colindex - 1
                 clist_col = get_column_letter(clist_colindex)

@@ -37,6 +37,13 @@ ifs_to_cname = {int(row['ifscode']): row['country'] for index, row in country_co
 iso_to_cname = {row['iso3']: row['country'] for index, row in country_code2name.iterrows()}
 iso2_to_cname = {row['iso2']: row['country'] for index, row in country_code2name.iterrows()}
 
+weo_group_code = pd.read_excel(weo_countrycode_file, sheet_name='weo_group_code')
+gr_ifs_to_iso = {int(row['ifscode']): row['iso'] for index, row in weo_group_code.iterrows()}
+gr_iso_to_ifs = {row['iso']: int(row['ifscode']) for index, row in weo_group_code.iterrows() if row['iso'] is not None}
+gr_ifs_to_cname = {int(row['ifscode']): row['group'] for index, row in weo_group_code.iterrows()}
+gr_iso_to_cname = {row['iso']: row['group'] for index, row in weo_group_code.iterrows()}
+
+
 def get_latest_file(folder_path, debug=False):
     files = os.listdir(folder_path)
     if debug:

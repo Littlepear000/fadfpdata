@@ -1,5 +1,5 @@
 from imf_datatools import idata_utilities
-from fadfpdata import iso_to_ifs, iso_to_cname
+from fadfpdata import iso_to_ifs, iso_to_cname, gr_iso_to_cname, gr_iso_to_ifs
 import pandas as pd
 
 
@@ -75,7 +75,7 @@ def idatapull(
 
         if debug:
             print(
-                f'{key}/{len(meta_dict.keys())}: idata_utilities.get_idata_data({dbname}, key={clist}+"."+{indlist}+"."+{freq}, longformat=True)')
+                f'{key}/{len(meta_dict.keys())}: idata_utilities.get_idata_data({dbname}, key={clist}.{indlist}.{freq}, longformat=True)')
         # Only triggered when using EcosSet
         if dbname is not None:
             data = idata_utilities.get_idata_data(dbname, key=fr'{clist}.{indlist}.{freq}', longformat=True)
@@ -103,8 +103,10 @@ def idatapull(
 
     df.columns = df.columns.str.lower()
     df = df.rename(columns={'country': 'iso'})
-    df['country'] = df['iso'].map(iso_to_cname)
-    df['ifscode'] = df['iso'].map(iso_to_ifs)
+    df['country'] = df['iso'].map(gr_iso_to_cname)
+    df['country'] = df['country'].fillna(df['iso'].map(iso_to_cname))
+    df['ifscode'] = df['iso'].map(gr_iso_to_ifs)
+    df['ifscode'] = df['ifscode'].fillna(df['iso'].map(iso_to_ifs))
     df['ifscode'] = pd.to_numeric(df['ifscode'], errors='coerce')
     df = df[~df['ifscode'].isna()]
     df['ifscode'] = df['ifscode'].astype(int)

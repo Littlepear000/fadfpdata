@@ -12,11 +12,11 @@ curr_mon = int(fm_version[-2:])
 fm_folder = f'{fm_version}-{fm_folder_name}'
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
-blmbg_update_date = '20251217'
-wbnrh_update_date = '20260120'
-weo_update_date = '20260120'
-ep_update_date = '20250820'
-ep_start_year = 2024
+blmbg_update_date = '20260204'
+wbnrh_update_date = '20260209'
+weo_update_date = '20260209'
+ep_update_date = '20260206'
+ep_start_year = 2025
 
 weodata = iData()
 dum = Dummy()
