@@ -5,16 +5,18 @@ from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.idata import iData
 from fadfpdata.utils.core import cname_to_ifs, ifs_to_cname, iso_to_ifs
 
-fm_version = '2026-04'
-fm_folder_name = 'April Monitor'
+fm_version = '2026-10'
+fm_folder_name = 'October-Monitor'
 curr_year = int(fm_version[:4])
 curr_mon = int(fm_version[-2:])
 fm_folder = f'{fm_version}-{fm_folder_name}'
 input_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA\input sources'
 output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
-blmbg_update_date = '20260326'
-wbnrh_update_date = '20260326'
-weo_update_date = '20260326'
+# input_folder = fr'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Shelley_My Projects\Fiscal Monitor\202610\MSA\MSA_Qdrive_copy\input sources'
+# output_folder = fr'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Shelley_My Projects\Fiscal Monitor\202610\MSA\MSA_Qdrive_copy\MSA'
+blmbg_update_date = '20260817'
+wbnrh_update_date = '20260816'
+weo_update_date = '20260816'
 ep_update_date = '20260206'
 ep_start_year = 2025
 

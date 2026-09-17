@@ -55,8 +55,8 @@ stat23_25_dict = {
     'STAT25': 'B3:B43',
 }
 
-ps = cpd.PutxlSet(fr'{output_folder}\Stat_Tables23-25_FMApr2026_{weo_update_date}.xlsx')
+ps = cpd.PutxlSet(fr'{output_folder}\Stat_Tables23-25_FMOct2026_{weo_update_date}.xlsx')
 for sheet, cellrange in stat23_25_dict.items():
-    country_order = cpd.pwread(fr'{output_folder}\Stat_Tables23-25_FMApr2026_{weo_update_date}.xlsx', sheet_name=sheet, cellrange=cellrange)[0].rename(columns={'unnamed_1': 'country'})
+    country_order = cpd.pwread(fr'{output_folder}\Stat_Tables23-25_FMOct2026_{weo_update_date}.xlsx', sheet_name=sheet, cellrange=cellrange)[0].rename(columns={'unnamed_1': 'country'})
     table_final = country_order.merge(final_table, on='country', how='left')
     ps.putxl(table_final.drop('country', axis=1), sheet_name=sheet, cell='C4', header=False, index=False)

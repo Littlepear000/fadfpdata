@@ -1,6 +1,7 @@
 import pandas as pd
 from fadfpdata.downloads import ecos_root
 from fadfpdata.utils.core import get_latest_file
+import os
 
 month_dict = {
     'Jan': '01',
@@ -20,8 +21,9 @@ for month in month_dict.keys():
 vintages = all_vintages['vintage_year'].unique()
 for v in vintages:
     vint_rename = v[:4] + month_dict[v[-3:]]
+    output_path = fr'{ecos_root}\WEOvint\WEOvint_{vint_rename}.csv'
+    # if os.path.exists(output_path):
+    #     continue
     print(vint_rename)
-    df_v = df[df['vintage_year'] == v]
-    df_v.to_csv(
-        fr'{ecos_root}\WEOvint\WEOvint_{vint_rename}.csv',
-        index=False)
+    df_v = all_vintages[all_vintages['vintage_year'] == v]
+    df_v.to_csv(output_path, index=False)

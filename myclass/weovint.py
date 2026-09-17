@@ -30,4 +30,4 @@ class WeoVint(ImfFrame):
 
 
 if __name__ == '__main__':
-    d = WeoVint(version='202407')
+    d = WeoVint(version='202607')
