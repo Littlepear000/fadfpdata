@@ -16,7 +16,7 @@ output_folder = fr'Q:\DATA\FP\Fiscal Monitor\{fm_folder}\MSA'
 # output_folder = fr'C:\Users\xli7\OneDrive - International Monetary Fund (PRD)\Shelley_My Projects\Fiscal Monitor\202610\MSA\MSA_Qdrive_copy\MSA'
 blmbg_update_date = '20260817'
 wbnrh_update_date = '20260816'
-weo_update_date = '20260816'
+weo_update_date = '20261006'
 ep_update_date = '20260206'
 ep_start_year = 2025
 
