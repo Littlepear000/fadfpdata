@@ -5,7 +5,7 @@ from fadfpdata.myclass.dummy import Dummy
 from fadfpdata.myclass.idata import iData
 from fadfpdata.utils.core import cname_to_ifs, ifs_to_cname, iso_to_ifs
 
-fm_version = '2026-10'
+fm_version = '2027-04'
 fm_folder_name = 'October-Monitor'
 curr_year = int(fm_version[:4])
 curr_mon = int(fm_version[-2:])
