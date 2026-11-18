@@ -50,7 +50,7 @@ final_table.loc[final_table['country'].isin(group_dict.keys()), 'nfw'] = ''
 final_table.loc[final_table['country'].isin(pre_pan_cnl_dict.keys()), 'pre_pan_cnl'] = final_table['country'].map(pre_pan_cnl_dict)
 
 stat23_25_dict = {
-    'STAT23': 'B3:B42',
+    'STAT23': 'B3:B43',
     'STAT24': 'B3:B47',
     'STAT25': 'B3:B43',
 }
@@ -60,3 +60,6 @@ for sheet, cellrange in stat23_25_dict.items():
     country_order = cpd.pwread(fr'{output_folder}\Stat_Tables23-25_FMOct2026_{weo_update_date}.xlsx', sheet_name=sheet, cellrange=cellrange)[0].rename(columns={'unnamed_1': 'country'})
     table_final = country_order.merge(final_table, on='country', how='left')
     ps.putxl(table_final.drop('country', axis=1), sheet_name=sheet, cell='C4', header=False, index=False)
+
+# country_order = cpd.pwread(fr'{output_folder}\Stat_Tables23-25_FMOct2026_{weo_update_date}.xlsx', sheet_name='STAT23', cellrange='B3:B43')[0].rename(columns={'unnamed_1': 'country'})
+# table_final = country_order.merge(final_table, on='country', how='left')
